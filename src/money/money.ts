@@ -39,7 +39,7 @@ export default class Money {
     locales?: string | string[],
     options: Omit<Intl.NumberFormatOptions, 'style' | 'currency'> = {}
   ) {
-    return this.formatter(locales, options).format(this.amount);
+    return this.formatter(locales, options).format(Number(this.amount));
   }
 
   formatter(
@@ -91,6 +91,6 @@ export default class Money {
   }
 
   toString() {
-    return this.formatter().format(this.amount);
+    return this.formatter().format(Number(this.amount));
   }
 }
