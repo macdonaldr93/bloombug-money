@@ -1,8 +1,7 @@
 import { Big } from 'bigdecimal.js';
 import Currency, { CurrencyCodeISO4217, ICurrency } from '../currency';
 import Money from '../money';
-import { RateMemoryStore, IRateStore } from '../rates';
-import { UnknownRateError } from './errors';
+import { IRateStore, RateMemoryStore, UnknownRateError } from '../rates';
 
 export default class Exchange {
   store: IRateStore;

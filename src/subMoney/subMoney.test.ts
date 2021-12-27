@@ -5,7 +5,7 @@ import subMoney from './subMoney';
 
 describe('subMoney', () => {
   beforeAll(() => {
-    Currency.import(isoCurrencies);
+    Currency.load(isoCurrencies);
   });
 
   it('returns expected fractional', () => {

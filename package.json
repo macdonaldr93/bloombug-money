@@ -37,18 +37,22 @@
   "size-limit": [
     {
       "path": "dist/mint-fns.cjs.production.min.js",
-      "limit": "10 KB"
+      "limit": "14 KB"
     },
     {
       "path": "dist/mint-fns.esm.js",
-      "limit": "10 KB"
+      "limit": "14 KB"
     }
   ],
   "jest": {
-    "setupFilesAfterEnv": ["<rootDir>/src/jest/setup.ts"]
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/jest/setup.ts"
+    ]
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "7.0.5",
+    "@size-limit/webpack": "7.0.5",
+    "@size-limit/webpack-why": "7.0.5",
     "husky": "7.0.4",
     "size-limit": "7.0.5",
     "tsdx": "0.14.1",

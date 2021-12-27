@@ -16,6 +16,15 @@ money.format('en-US');
 
 ## Classes
 
+### Currency
+
+```js
+import { Currency } from 'mint-fns';
+
+const currency = new Currency('USD');
+//=> 'USD'
+```
+
 ### Money
 
 ```js
@@ -33,26 +42,33 @@ money.sub(new Money(100, 'USD'));
 money.toString();
 //=> $1.00
 
-const moneyCad = new Money(10000, 'CAD');
-//=> Money {fractional: 10000, currency: 'CAD'}
-
-moneyCad.format('fr-FR', { currencyDisplay: 'narrowSymbol' });
+money.format('fr-FR', { currencyDisplay: 'narrowSymbol' });
 //=> 100,00 $
 
-money.eq(moneyCad);
+money.eq(new Money(400, 'USD'));
 //=> false
 
 money.eq(new Money(100, 'USD'));
 //=> true
 ```
 
-### Currency
+### Exchange
 
 ```js
-import { Currency } from 'mint-fns';
+import { Currency, Exchange } from 'mint-fns';
+import isoCurrencies from 'mint-fns/iso-currencies.json';
 
-const currency = new Currency('USD');
-//=> 'USD'
+Currency.load(isoCurrencies);
+
+const exchange = new Exchange();
+
+exchange.addRate('USD', 'CAD', 0.745);
+
+const money = new Money(100, 'USD');
+//=> Money {fractional: 100, currency: 'USD'}
+
+exchange.exchangeWith(money, 'CAD');
+//=> Money {fractional: 74, currency: 'CAD'}
 ```
 
 ## Why another money library?

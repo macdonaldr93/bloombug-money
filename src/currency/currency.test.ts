@@ -4,17 +4,17 @@ import { UnknownCurrencyError } from './errors';
 
 describe('Currency', () => {
   beforeAll(() => {
-    Currency.import(isoCurrencies);
+    Currency.load(isoCurrencies);
   });
 
   describe('static', () => {
-    describe('#defaultCurrency', () => {
+    describe('#defaultStore', () => {
       it('returns USD by default', () => {
-        expect(Currency.defaultCurrency).toEqual({ USD: isoCurrencies['USD'] });
+        expect(Currency.defaultStore).toEqual({ USD: isoCurrencies['USD'] });
       });
 
       it('reinitializes the store when changed', () => {
-        Currency.defaultCurrency = {
+        Currency.defaultStore = {
           CAD: {
             priority: 5,
             isoCode: 'CAD',
@@ -52,17 +52,17 @@ describe('Currency', () => {
           },
         });
 
-        Currency.defaultCurrency = { USD: isoCurrencies['USD'] };
+        Currency.defaultStore = { USD: isoCurrencies['USD'] };
       });
     });
 
-    describe('import()', () => {
+    describe('load()', () => {
       afterAll(() => {
-        Currency.import(isoCurrencies);
+        Currency.load(isoCurrencies);
       });
 
-      it('imports currencies synchronously', () => {
-        Currency.import({
+      it('loads currencies synchronously', () => {
+        Currency.load({
           USD: {
             priority: 1,
             isoCode: 'USD',
@@ -133,8 +133,8 @@ describe('Currency', () => {
         });
       });
 
-      it('imports currencies asynchronously', async () => {
-        await Currency.import(async () => ({
+      it('loads currencies asynchronously', async () => {
+        await Currency.load(async () => ({
           USD: {
             priority: 1,
             isoCode: 'USD',
@@ -206,14 +206,14 @@ describe('Currency', () => {
       });
     });
 
-    describe('export()', () => {
+    describe('toJSON()', () => {
       afterAll(() => {
-        Currency.import(isoCurrencies);
+        Currency.load(isoCurrencies);
       });
 
-      it('imports currencies synchronously', () => {
+      it('exports currencies as JSON', () => {
         Currency.reset();
-        const currencies = Currency.export();
+        const currencies = Currency.toJSON();
 
         expect(currencies).toEqual({
           USD: {
@@ -234,87 +234,15 @@ describe('Currency', () => {
           },
         });
       });
-
-      it('imports currencies asynchronously', async () => {
-        await Currency.import(async () => ({
-          USD: {
-            priority: 1,
-            isoCode: 'USD',
-            name: 'United States Dollar',
-            symbol: '$',
-            disambiguateSymbol: 'US$',
-            alternateSymbols: ['US$'],
-            subunit: 'Cent',
-            subunitToUnit: 100,
-            symbolFirst: true,
-            htmlEntity: '$',
-            decimalMark: '.',
-            thousandsSeparator: ',',
-            isoNumeric: '840',
-            smallestDenomination: 1,
-          },
-          CAD: {
-            priority: 5,
-            isoCode: 'CAD',
-            name: 'Canadian Dollar',
-            symbol: '$',
-            disambiguateSymbol: 'C$',
-            alternateSymbols: ['C$', 'CAD$'],
-            subunit: 'Cent',
-            subunitToUnit: 100,
-            symbolFirst: true,
-            htmlEntity: '$',
-            decimalMark: '.',
-            thousandsSeparator: ',',
-            isoNumeric: '124',
-            smallestDenomination: 5,
-          },
-        }));
-
-        expect(Currency.store).toEqual({
-          USD: {
-            priority: 1,
-            isoCode: 'USD',
-            name: 'United States Dollar',
-            symbol: '$',
-            disambiguateSymbol: 'US$',
-            alternateSymbols: ['US$'],
-            subunit: 'Cent',
-            subunitToUnit: 100,
-            symbolFirst: true,
-            htmlEntity: '$',
-            decimalMark: '.',
-            thousandsSeparator: ',',
-            isoNumeric: '840',
-            smallestDenomination: 1,
-          },
-          CAD: {
-            priority: 5,
-            isoCode: 'CAD',
-            name: 'Canadian Dollar',
-            symbol: '$',
-            disambiguateSymbol: 'C$',
-            alternateSymbols: ['C$', 'CAD$'],
-            subunit: 'Cent',
-            subunitToUnit: 100,
-            symbolFirst: true,
-            htmlEntity: '$',
-            decimalMark: '.',
-            thousandsSeparator: ',',
-            isoNumeric: '124',
-            smallestDenomination: 5,
-          },
-        });
-      });
     });
 
     describe('reset()', () => {
       afterAll(() => {
-        Currency.import(isoCurrencies);
+        Currency.load(isoCurrencies);
       });
 
       it('resets to default currency', () => {
-        Currency.defaultCurrency = {
+        Currency.defaultStore = {
           CAD: {
             priority: 5,
             isoCode: 'CAD',
@@ -358,7 +286,7 @@ describe('Currency', () => {
 
     describe('clear()', () => {
       afterAll(() => {
-        Currency.import(isoCurrencies);
+        Currency.load(isoCurrencies);
       });
 
       it('clears all currencies', () => {
@@ -435,7 +363,7 @@ describe('Currency', () => {
 
         expect(unregistered).toBeTruthy();
 
-        Currency.import(isoCurrencies);
+        Currency.load(isoCurrencies);
       });
 
       it('returns false when currency did not exist', () => {
@@ -445,7 +373,7 @@ describe('Currency', () => {
 
         expect(unregistered).toBeFalsy();
 
-        Currency.import(isoCurrencies);
+        Currency.load(isoCurrencies);
       });
     });
 
@@ -518,7 +446,7 @@ describe('Currency', () => {
 
       expect(() => new Currency('USD')).toThrowError();
 
-      Currency.import(isoCurrencies);
+      Currency.load(isoCurrencies);
     });
 
     it('#separator returns decimalMark mark', () => {

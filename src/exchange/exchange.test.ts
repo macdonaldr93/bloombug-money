@@ -5,7 +5,7 @@ import Exchange from './exchange';
 
 describe('Exchange', () => {
   beforeAll(() => {
-    Currency.import(isoCurrencies);
+    Currency.load(isoCurrencies);
   });
 
   describe('exchangeWith()', () => {

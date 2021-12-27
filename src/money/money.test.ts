@@ -4,7 +4,7 @@ import Money from './money';
 
 describe('Money', () => {
   beforeAll(() => {
-    Currency.import(isoCurrencies);
+    Currency.load(isoCurrencies);
   });
 
   describe('#currency', () => {

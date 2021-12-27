@@ -5,7 +5,7 @@ import isMoneyEqual from './isMoneyEqual';
 
 describe('isMoneyEqual', () => {
   beforeAll(async () => {
-    Currency.import(isoCurrencies);
+    Currency.load(isoCurrencies);
   });
 
   it('returns true when money is same fractional and currency', () => {

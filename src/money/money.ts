@@ -1,11 +1,11 @@
-import { UnknownRateError } from '../bank';
 import Currency, { CurrencyCodeISO4217, ICurrency } from '../currency';
+import { UnknownRateError } from '../rates';
 import { isValueFinite } from '../utilities/number';
 
 export interface MoneyOptions {}
 
 export default class Money {
-  static defaultCurrency: Currency = new Currency('USD');
+  static defaultCurrency: Currency;
 
   currency: Currency;
   fractional: bigint;
@@ -94,3 +94,5 @@ export default class Money {
     return this.formatter().format(Number(this.amount));
   }
 }
+
+Money.defaultCurrency = new Currency('USD');

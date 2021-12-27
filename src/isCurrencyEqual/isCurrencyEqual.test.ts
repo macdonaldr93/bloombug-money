@@ -4,7 +4,7 @@ import isCurrencyEqual from './isCurrencyEqual';
 
 describe('isCurrencyEqual', () => {
   beforeAll(() => {
-    Currency.import(isoCurrencies);
+    Currency.load(isoCurrencies);
   });
 
   it('returns true when iso codes are the same', () => {
