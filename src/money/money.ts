@@ -67,6 +67,8 @@ export default class Money {
     }
 
     this.fractional += money.fractional;
+
+    return this;
   }
 
   sub(money: Money) {
@@ -77,6 +79,15 @@ export default class Money {
     }
 
     this.fractional -= money.fractional;
+
+    return this;
+  }
+
+  toLocaleString(
+    locales?: string | string[],
+    options: Omit<Intl.NumberFormatOptions, 'style' | 'currency'> = {}
+  ) {
+    return this.format(locales, options);
   }
 
   toString() {

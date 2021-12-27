@@ -183,6 +183,14 @@ describe('Currency', () => {
     });
   });
 
+  describe('toLocaleString()', () => {
+    it('returns name', () => {
+      const currency = new Currency('CAD');
+
+      expect(currency.toLocaleString()).toEqual('Canadian Dollar');
+    });
+  });
+
   describe('toString()', () => {
     it('returns iso code', () => {
       const currency = new Currency('CAD');

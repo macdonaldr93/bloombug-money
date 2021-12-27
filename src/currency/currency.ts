@@ -133,6 +133,10 @@ export default class Currency implements ICurrency {
     return this.isoCode === other.isoCode;
   }
 
+  toLocaleString() {
+    return this.name || this.isoCode;
+  }
+
   toString() {
     return this.isoCode;
   }

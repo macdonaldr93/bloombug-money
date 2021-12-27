@@ -171,6 +171,24 @@ describe('Money', () => {
     });
   });
 
+  describe('toLocaleString()', () => {
+    it('returns expected format', () => {
+      const money = new Money(400, 'CAD');
+      const formattedMoney = money.toLocaleString('en-US');
+
+      expect(formattedMoney).toEqual('CA$4.00');
+    });
+
+    it('returns formatter with options', () => {
+      const money = new Money(400, 'CAD');
+      const formattedMoney = money.toLocaleString('en-US', {
+        currencyDisplay: 'narrowSymbol',
+      });
+
+      expect(formattedMoney).toEqual('$4.00');
+    });
+  });
+
   describe('toString()', () => {
     it('returns expected value', () => {
       const money = new Money(400, 'CAD');
