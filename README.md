@@ -1,6 +1,6 @@
 # mint-fns
 
-**mint-fns** provides the most comprehensive, yet simple and consistent toolset for manipulating JavaScript money and currency in a browser & Node.js.
+The most comprehensive, yet simple and consistent toolset for manipulating JavaScript money and currency in a browser & Node.js.
 
 ## Getting started
 
