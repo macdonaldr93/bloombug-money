@@ -70,7 +70,7 @@ describe('Money', () => {
 
       money.add(other);
 
-      expect(money.eq(new Money(800, 'CAD'))).toBeTruthy();
+      expect(money).toEqualMoney(new Money(800, 'CAD'));
     });
 
     it('throws when exchange rate is not found', () => {
@@ -90,7 +90,7 @@ describe('Money', () => {
 
       money.sub(other);
 
-      expect(money.eq(new Money(300, 'CAD'))).toBeTruthy();
+      expect(money).toEqualMoney(new Money(300, 'CAD'));
     });
 
     it('throws when exchange rate is not found', () => {

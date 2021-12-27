@@ -6,7 +6,7 @@ describe('addMoney', () => {
     const money = new Money(400, 'CAD');
     const other = new Money(400, 'CAD');
 
-    expect(addMoney(money, other).eq(new Money(800, 'CAD'))).toBeTruthy();
+    expect(addMoney(money, other)).toEqualMoney(new Money(800, 'CAD'));
   });
 
   it('throws when exchange rate is not found', () => {

@@ -44,6 +44,9 @@
       "limit": "10 KB"
     }
   ],
+  "jest": {
+    "setupFilesAfterEnv": ["<rootDir>/src/jest/setup.ts"]
+  },
   "devDependencies": {
     "@size-limit/preset-small-lib": "7.0.5",
     "husky": "7.0.4",
