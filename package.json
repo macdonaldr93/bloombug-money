@@ -31,16 +31,16 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "ts-money",
+  "name": "mint-fns",
   "author": "Ryan Macdonald",
-  "module": "dist/ts-money.esm.js",
+  "module": "dist/mint-fns.esm.js",
   "size-limit": [
     {
-      "path": "dist/ts-money.cjs.production.min.js",
+      "path": "dist/mint-fns.cjs.production.min.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/ts-money.esm.js",
+      "path": "dist/mint-fns.esm.js",
       "limit": "10 KB"
     }
   ],
