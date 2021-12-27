@@ -1,10 +1,38 @@
-import DefaultISOCurrencies from '../config/currency_iso.json';
 import { UnknownCurrencyError } from './errors';
-import { CurrencyCodeISO4217, ICurrency } from './types';
+import { CurrencyCodeISO4217, ICurrency, CurrencyLoader } from './types';
 
 export default class Currency implements ICurrency {
-  static store: Record<string, ICurrency> = Currency.loadDefaultCurrencies();
+  static store: Record<string, ICurrency> = {
+    USD: {
+      priority: 1,
+      isoCode: 'USD',
+      name: 'United States Dollar',
+      symbol: '$',
+      disambiguateSymbol: 'US$',
+      alternateSymbols: ['US$'],
+      subunit: 'Cent',
+      subunitToUnit: 100,
+      symbolFirst: true,
+      htmlEntity: '$',
+      decimalMark: '.',
+      thousandsSeparator: ',',
+      isoNumeric: '840',
+      smallestDenomination: 1,
+    },
+  };
   private static instances = new Map<CurrencyCodeISO4217 | string, Currency>();
+
+  static async import(currencies: CurrencyLoader) {
+    if (typeof currencies === 'object') {
+      Currency.store = JSON.parse(JSON.stringify(currencies));
+    } else {
+      Currency.store = await currencies();
+    }
+  }
+
+  static export() {
+    return JSON.parse(JSON.stringify(Currency.store));
+  }
 
   static all(): Currency[] {
     return Object.keys(Currency.store).map(
@@ -49,7 +77,7 @@ export default class Currency implements ICurrency {
 
   static reset(): boolean {
     Currency.instances = new Map();
-    Currency.store = this.loadDefaultCurrencies();
+    Currency.store = {};
 
     return true;
   }
@@ -64,10 +92,6 @@ export default class Currency implements ICurrency {
     } else {
       throw new UnknownCurrencyError(`Unknown currency '${object}'`);
     }
-  }
-
-  private static loadDefaultCurrencies() {
-    return JSON.parse(JSON.stringify(DefaultISOCurrencies));
   }
 
   alternateSymbols?: string[] | null;

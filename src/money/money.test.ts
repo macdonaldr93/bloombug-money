@@ -1,7 +1,12 @@
+import isoCurrencies from '../iso-currencies.json';
 import Currency from '../currency';
 import Money from './money';
 
 describe('Money', () => {
+  beforeAll(() => {
+    Currency.import(isoCurrencies);
+  });
+
   describe('#currency', () => {
     it('returns expected currency from string', () => {
       const money = new Money(400, 'CAD');

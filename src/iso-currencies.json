@@ -2617,7 +2617,7 @@
     "decimalMark": ".",
     "thousandsSeparator": ",",
     "isoNumeric": "962",
-    "smallestDenomination": ""
+    "smallestDenomination": null
   },
   "XTS": {
     "priority": 100,
@@ -2633,7 +2633,7 @@
     "decimalMark": ".",
     "thousandsSeparator": ",",
     "isoNumeric": "963",
-    "smallestDenomination": ""
+    "smallestDenomination": null
   },
   "YER": {
     "priority": 100,

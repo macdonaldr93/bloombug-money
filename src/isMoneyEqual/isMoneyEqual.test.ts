@@ -1,7 +1,13 @@
+import isoCurrencies from '../iso-currencies.json';
+import Currency from '../currency';
 import Money from '../money';
 import isMoneyEqual from './isMoneyEqual';
 
 describe('isMoneyEqual', () => {
+  beforeAll(async () => {
+    Currency.import(isoCurrencies);
+  });
+
   it('returns true when money is same fractional and currency', () => {
     const money1 = new Money(400, 'CAD');
     const money2 = new Money(400, 'CAD');

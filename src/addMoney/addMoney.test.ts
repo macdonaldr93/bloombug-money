@@ -1,7 +1,13 @@
+import isoCurrencies from '../iso-currencies.json';
+import Currency from '../currency';
 import Money from '../money';
 import addMoney from './addMoney';
 
 describe('addMoney', () => {
+  beforeAll(() => {
+    Currency.import(isoCurrencies);
+  });
+
   it('returns expected fractional', () => {
     const money = new Money(400, 'CAD');
     const other = new Money(400, 'CAD');

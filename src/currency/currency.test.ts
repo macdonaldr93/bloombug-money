@@ -1,7 +1,12 @@
+import isoCurrencies from '../iso-currencies.json';
 import Currency from './currency';
 import { UnknownCurrencyError } from './errors';
 
 describe('Currency', () => {
+  beforeAll(() => {
+    Currency.import(isoCurrencies);
+  });
+
   describe('static', () => {
     describe('all()', () => {
       it('returns every currency by iso code', () => {
@@ -70,7 +75,7 @@ describe('Currency', () => {
 
         expect(unregistered).toBeTruthy();
 
-        Currency.reset();
+        Currency.import(isoCurrencies);
       });
 
       it('returns false when currency did not exist', () => {
@@ -80,7 +85,7 @@ describe('Currency', () => {
 
         expect(unregistered).toBeFalsy();
 
-        Currency.reset();
+        Currency.import(isoCurrencies);
       });
     });
 
