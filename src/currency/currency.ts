@@ -1,37 +1,51 @@
 import { UnknownCurrencyError } from './errors';
 import { CurrencyCodeISO4217, ICurrency, CurrencyLoader } from './types';
+import deepClone from '../utilities/deepClone'
 
 export default class Currency implements ICurrency {
-  static store: Record<string, ICurrency> = {
-    USD: {
-      priority: 1,
-      isoCode: 'USD',
-      name: 'United States Dollar',
-      symbol: '$',
-      disambiguateSymbol: 'US$',
-      alternateSymbols: ['US$'],
-      subunit: 'Cent',
-      subunitToUnit: 100,
-      symbolFirst: true,
-      htmlEntity: '$',
-      decimalMark: '.',
-      thousandsSeparator: ',',
-      isoNumeric: '840',
-      smallestDenomination: 1,
-    },
-  };
-  private static instances = new Map<CurrencyCodeISO4217 | string, Currency>();
+  static get defaultCurrency(): Record<string, ICurrency> {
+    return Currency._defaultCurrency;
+  }
+  static set defaultCurrency(currency: Record<string, ICurrency>) {
+    Currency._defaultCurrency = currency;
+    Currency.store = deepClone(currency);
+  }
+  static store: Record<string, ICurrency>;
+  private static _defaultCurrency: Record<string, ICurrency>;
+  private static instances;
+
+  static {
+    this.defaultCurrency = {
+      USD: {
+        priority: 1,
+        isoCode: 'USD',
+        name: 'United States Dollar',
+        symbol: '$',
+        disambiguateSymbol: 'US$',
+        alternateSymbols: ['US$'],
+        subunit: 'Cent',
+        subunitToUnit: 100,
+        symbolFirst: true,
+        htmlEntity: '$',
+        decimalMark: '.',
+        thousandsSeparator: ',',
+        isoNumeric: '840',
+        smallestDenomination: 1,
+      },
+    }
+    this.instances = new Map<CurrencyCodeISO4217 | string, Currency>()
+  }
 
   static async import(currencies: CurrencyLoader) {
     if (typeof currencies === 'object') {
-      Currency.store = JSON.parse(JSON.stringify(currencies));
+      Currency.store = deepClone(currencies);
     } else {
       Currency.store = await currencies();
     }
   }
 
   static export() {
-    return JSON.parse(JSON.stringify(Currency.store));
+    return deepClone(Currency.store);
   }
 
   static all(): Currency[] {
@@ -77,6 +91,13 @@ export default class Currency implements ICurrency {
 
   static reset(): boolean {
     Currency.instances = new Map();
+    Currency.store = deepClone(Currency.defaultCurrency);
+
+    return true;
+  }
+
+  static clear(): boolean {
+    Currency.instances = new Map();
     Currency.store = {};
 
     return true;
@@ -111,6 +132,15 @@ export default class Currency implements ICurrency {
   thousandsSeparator: string;
 
   constructor(isoCode: CurrencyCodeISO4217 | string) {
+    if (Object.keys(Currency.store).length === 0) {
+      throw new Error(`You must call Currency.import() first. For example:
+
+import isoCurrencies from 'mint-fns/iso-currencies.json';
+
+Currency.import(isoCurrencies);
+      `);
+    }
+
     if (Currency.instances.has(isoCode)) {
       return Currency.instances.get(isoCode)!;
     }

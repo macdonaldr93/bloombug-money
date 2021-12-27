@@ -8,6 +8,366 @@ describe('Currency', () => {
   });
 
   describe('static', () => {
+    describe('#defaultCurrency', () => {
+      it('returns USD by default', () => {
+        expect(Currency.defaultCurrency).toEqual({ USD: isoCurrencies['USD'] });
+      });
+
+      it('reinitializes the store when changed', () => {
+        Currency.defaultCurrency = {
+          CAD: {
+            priority: 5,
+            isoCode: 'CAD',
+            name: 'Canadian Dollar',
+            symbol: '$',
+            disambiguateSymbol: 'C$',
+            alternateSymbols: ['C$', 'CAD$'],
+            subunit: 'Cent',
+            subunitToUnit: 100,
+            symbolFirst: true,
+            htmlEntity: '$',
+            decimalMark: '.',
+            thousandsSeparator: ',',
+            isoNumeric: '124',
+            smallestDenomination: 5,
+          },
+        };
+
+        expect(Currency.store).toEqual({
+          CAD: {
+            priority: 5,
+            isoCode: 'CAD',
+            name: 'Canadian Dollar',
+            symbol: '$',
+            disambiguateSymbol: 'C$',
+            alternateSymbols: ['C$', 'CAD$'],
+            subunit: 'Cent',
+            subunitToUnit: 100,
+            symbolFirst: true,
+            htmlEntity: '$',
+            decimalMark: '.',
+            thousandsSeparator: ',',
+            isoNumeric: '124',
+            smallestDenomination: 5,
+          },
+        });
+
+        Currency.defaultCurrency = { USD: isoCurrencies['USD'] };
+      });
+    });
+
+    describe('import()', () => {
+      afterAll(() => {
+        Currency.import(isoCurrencies);
+      });
+
+      it('imports currencies synchronously', () => {
+        Currency.import({
+          USD: {
+            priority: 1,
+            isoCode: 'USD',
+            name: 'United States Dollar',
+            symbol: '$',
+            disambiguateSymbol: 'US$',
+            alternateSymbols: ['US$'],
+            subunit: 'Cent',
+            subunitToUnit: 100,
+            symbolFirst: true,
+            htmlEntity: '$',
+            decimalMark: '.',
+            thousandsSeparator: ',',
+            isoNumeric: '840',
+            smallestDenomination: 1,
+          },
+          CAD: {
+            priority: 5,
+            isoCode: 'CAD',
+            name: 'Canadian Dollar',
+            symbol: '$',
+            disambiguateSymbol: 'C$',
+            alternateSymbols: ['C$', 'CAD$'],
+            subunit: 'Cent',
+            subunitToUnit: 100,
+            symbolFirst: true,
+            htmlEntity: '$',
+            decimalMark: '.',
+            thousandsSeparator: ',',
+            isoNumeric: '124',
+            smallestDenomination: 5,
+          },
+        });
+
+        expect(Currency.store).toEqual({
+          USD: {
+            priority: 1,
+            isoCode: 'USD',
+            name: 'United States Dollar',
+            symbol: '$',
+            disambiguateSymbol: 'US$',
+            alternateSymbols: ['US$'],
+            subunit: 'Cent',
+            subunitToUnit: 100,
+            symbolFirst: true,
+            htmlEntity: '$',
+            decimalMark: '.',
+            thousandsSeparator: ',',
+            isoNumeric: '840',
+            smallestDenomination: 1,
+          },
+          CAD: {
+            priority: 5,
+            isoCode: 'CAD',
+            name: 'Canadian Dollar',
+            symbol: '$',
+            disambiguateSymbol: 'C$',
+            alternateSymbols: ['C$', 'CAD$'],
+            subunit: 'Cent',
+            subunitToUnit: 100,
+            symbolFirst: true,
+            htmlEntity: '$',
+            decimalMark: '.',
+            thousandsSeparator: ',',
+            isoNumeric: '124',
+            smallestDenomination: 5,
+          },
+        });
+      });
+
+      it('imports currencies asynchronously', async () => {
+        await Currency.import(async () => ({
+          USD: {
+            priority: 1,
+            isoCode: 'USD',
+            name: 'United States Dollar',
+            symbol: '$',
+            disambiguateSymbol: 'US$',
+            alternateSymbols: ['US$'],
+            subunit: 'Cent',
+            subunitToUnit: 100,
+            symbolFirst: true,
+            htmlEntity: '$',
+            decimalMark: '.',
+            thousandsSeparator: ',',
+            isoNumeric: '840',
+            smallestDenomination: 1,
+          },
+          CAD: {
+            priority: 5,
+            isoCode: 'CAD',
+            name: 'Canadian Dollar',
+            symbol: '$',
+            disambiguateSymbol: 'C$',
+            alternateSymbols: ['C$', 'CAD$'],
+            subunit: 'Cent',
+            subunitToUnit: 100,
+            symbolFirst: true,
+            htmlEntity: '$',
+            decimalMark: '.',
+            thousandsSeparator: ',',
+            isoNumeric: '124',
+            smallestDenomination: 5,
+          },
+        }));
+
+        expect(Currency.store).toEqual({
+          USD: {
+            priority: 1,
+            isoCode: 'USD',
+            name: 'United States Dollar',
+            symbol: '$',
+            disambiguateSymbol: 'US$',
+            alternateSymbols: ['US$'],
+            subunit: 'Cent',
+            subunitToUnit: 100,
+            symbolFirst: true,
+            htmlEntity: '$',
+            decimalMark: '.',
+            thousandsSeparator: ',',
+            isoNumeric: '840',
+            smallestDenomination: 1,
+          },
+          CAD: {
+            priority: 5,
+            isoCode: 'CAD',
+            name: 'Canadian Dollar',
+            symbol: '$',
+            disambiguateSymbol: 'C$',
+            alternateSymbols: ['C$', 'CAD$'],
+            subunit: 'Cent',
+            subunitToUnit: 100,
+            symbolFirst: true,
+            htmlEntity: '$',
+            decimalMark: '.',
+            thousandsSeparator: ',',
+            isoNumeric: '124',
+            smallestDenomination: 5,
+          },
+        });
+      });
+    });
+
+    describe('export()', () => {
+      afterAll(() => {
+        Currency.import(isoCurrencies);
+      });
+
+      it('imports currencies synchronously', () => {
+        Currency.reset();
+        const currencies = Currency.export();
+
+        expect(currencies).toEqual({
+          USD: {
+            priority: 1,
+            isoCode: 'USD',
+            name: 'United States Dollar',
+            symbol: '$',
+            disambiguateSymbol: 'US$',
+            alternateSymbols: ['US$'],
+            subunit: 'Cent',
+            subunitToUnit: 100,
+            symbolFirst: true,
+            htmlEntity: '$',
+            decimalMark: '.',
+            thousandsSeparator: ',',
+            isoNumeric: '840',
+            smallestDenomination: 1,
+          },
+        });
+      });
+
+      it('imports currencies asynchronously', async () => {
+        await Currency.import(async () => ({
+          USD: {
+            priority: 1,
+            isoCode: 'USD',
+            name: 'United States Dollar',
+            symbol: '$',
+            disambiguateSymbol: 'US$',
+            alternateSymbols: ['US$'],
+            subunit: 'Cent',
+            subunitToUnit: 100,
+            symbolFirst: true,
+            htmlEntity: '$',
+            decimalMark: '.',
+            thousandsSeparator: ',',
+            isoNumeric: '840',
+            smallestDenomination: 1,
+          },
+          CAD: {
+            priority: 5,
+            isoCode: 'CAD',
+            name: 'Canadian Dollar',
+            symbol: '$',
+            disambiguateSymbol: 'C$',
+            alternateSymbols: ['C$', 'CAD$'],
+            subunit: 'Cent',
+            subunitToUnit: 100,
+            symbolFirst: true,
+            htmlEntity: '$',
+            decimalMark: '.',
+            thousandsSeparator: ',',
+            isoNumeric: '124',
+            smallestDenomination: 5,
+          },
+        }));
+
+        expect(Currency.store).toEqual({
+          USD: {
+            priority: 1,
+            isoCode: 'USD',
+            name: 'United States Dollar',
+            symbol: '$',
+            disambiguateSymbol: 'US$',
+            alternateSymbols: ['US$'],
+            subunit: 'Cent',
+            subunitToUnit: 100,
+            symbolFirst: true,
+            htmlEntity: '$',
+            decimalMark: '.',
+            thousandsSeparator: ',',
+            isoNumeric: '840',
+            smallestDenomination: 1,
+          },
+          CAD: {
+            priority: 5,
+            isoCode: 'CAD',
+            name: 'Canadian Dollar',
+            symbol: '$',
+            disambiguateSymbol: 'C$',
+            alternateSymbols: ['C$', 'CAD$'],
+            subunit: 'Cent',
+            subunitToUnit: 100,
+            symbolFirst: true,
+            htmlEntity: '$',
+            decimalMark: '.',
+            thousandsSeparator: ',',
+            isoNumeric: '124',
+            smallestDenomination: 5,
+          },
+        });
+      });
+    });
+
+    describe('reset()', () => {
+      afterAll(() => {
+        Currency.import(isoCurrencies);
+      });
+
+      it('resets to default currency', () => {
+        Currency.defaultCurrency = {
+          CAD: {
+            priority: 5,
+            isoCode: 'CAD',
+            name: 'Canadian Dollar',
+            symbol: '$',
+            disambiguateSymbol: 'C$',
+            alternateSymbols: ['C$', 'CAD$'],
+            subunit: 'Cent',
+            subunitToUnit: 100,
+            symbolFirst: true,
+            htmlEntity: '$',
+            decimalMark: '.',
+            thousandsSeparator: ',',
+            isoNumeric: '124',
+            smallestDenomination: 5,
+          },
+        };
+
+        Currency.reset();
+
+        expect(Currency.store).toEqual({
+          CAD: {
+            priority: 5,
+            isoCode: 'CAD',
+            name: 'Canadian Dollar',
+            symbol: '$',
+            disambiguateSymbol: 'C$',
+            alternateSymbols: ['C$', 'CAD$'],
+            subunit: 'Cent',
+            subunitToUnit: 100,
+            symbolFirst: true,
+            htmlEntity: '$',
+            decimalMark: '.',
+            thousandsSeparator: ',',
+            isoNumeric: '124',
+            smallestDenomination: 5,
+          },
+        });
+      });
+    });
+
+    describe('clear()', () => {
+      afterAll(() => {
+        Currency.import(isoCurrencies);
+      });
+
+      it('clears all currencies', () => {
+        Currency.clear();
+
+        expect(Currency.store).toEqual({});
+      });
+    });
+
     describe('all()', () => {
       it('returns every currency by iso code', () => {
         const currencies = Currency.all();
@@ -153,7 +513,15 @@ describe('Currency', () => {
       );
     });
 
-    it('#separator returns decimal mark', () => {
+    it('throws when the currency store is empty', () => {
+      Currency.clear();
+
+      expect(() => new Currency('USD')).toThrowError();
+
+      Currency.import(isoCurrencies);
+    });
+
+    it('#separator returns decimalMark mark', () => {
       const currency = new Currency('CAD');
 
       expect(currency.separator).toEqual(currency.decimalMark);
