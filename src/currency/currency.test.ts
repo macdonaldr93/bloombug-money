@@ -1,4 +1,5 @@
 import isoCurrencies from '../iso-currencies.json';
+import { CAD, USD } from '../currencies';
 import Currency from './currency';
 import { UnknownCurrencyError } from './errors';
 
@@ -10,14 +11,14 @@ describe('Currency', () => {
   describe('static', () => {
     describe('#defaultStore', () => {
       it('returns USD by default', () => {
-        expect(Currency.defaultStore).toEqual({ USD: isoCurrencies['USD'] });
+        expect(Currency.defaultStore).toEqual({ USD: isoCurrencies[USD] });
       });
 
       it('reinitializes the store when changed', () => {
         Currency.defaultStore = {
           CAD: {
             priority: 5,
-            isoCode: 'CAD',
+            isoCode: CAD,
             name: 'Canadian Dollar',
             symbol: '$',
             disambiguateSymbol: 'C$',
@@ -36,7 +37,7 @@ describe('Currency', () => {
         expect(Currency.store).toEqual({
           CAD: {
             priority: 5,
-            isoCode: 'CAD',
+            isoCode: CAD,
             name: 'Canadian Dollar',
             symbol: '$',
             disambiguateSymbol: 'C$',
@@ -52,7 +53,7 @@ describe('Currency', () => {
           },
         });
 
-        Currency.defaultStore = { USD: isoCurrencies['USD'] };
+        Currency.defaultStore = { USD: isoCurrencies[USD] };
       });
     });
 
@@ -65,7 +66,7 @@ describe('Currency', () => {
         Currency.load({
           USD: {
             priority: 1,
-            isoCode: 'USD',
+            isoCode: USD,
             name: 'United States Dollar',
             symbol: '$',
             disambiguateSymbol: 'US$',
@@ -81,7 +82,7 @@ describe('Currency', () => {
           },
           CAD: {
             priority: 5,
-            isoCode: 'CAD',
+            isoCode: CAD,
             name: 'Canadian Dollar',
             symbol: '$',
             disambiguateSymbol: 'C$',
@@ -100,7 +101,7 @@ describe('Currency', () => {
         expect(Currency.store).toEqual({
           USD: {
             priority: 1,
-            isoCode: 'USD',
+            isoCode: USD,
             name: 'United States Dollar',
             symbol: '$',
             disambiguateSymbol: 'US$',
@@ -116,7 +117,7 @@ describe('Currency', () => {
           },
           CAD: {
             priority: 5,
-            isoCode: 'CAD',
+            isoCode: CAD,
             name: 'Canadian Dollar',
             symbol: '$',
             disambiguateSymbol: 'C$',
@@ -137,7 +138,7 @@ describe('Currency', () => {
         await Currency.load(async () => ({
           USD: {
             priority: 1,
-            isoCode: 'USD',
+            isoCode: USD,
             name: 'United States Dollar',
             symbol: '$',
             disambiguateSymbol: 'US$',
@@ -153,7 +154,7 @@ describe('Currency', () => {
           },
           CAD: {
             priority: 5,
-            isoCode: 'CAD',
+            isoCode: CAD,
             name: 'Canadian Dollar',
             symbol: '$',
             disambiguateSymbol: 'C$',
@@ -172,7 +173,7 @@ describe('Currency', () => {
         expect(Currency.store).toEqual({
           USD: {
             priority: 1,
-            isoCode: 'USD',
+            isoCode: USD,
             name: 'United States Dollar',
             symbol: '$',
             disambiguateSymbol: 'US$',
@@ -188,7 +189,7 @@ describe('Currency', () => {
           },
           CAD: {
             priority: 5,
-            isoCode: 'CAD',
+            isoCode: CAD,
             name: 'Canadian Dollar',
             symbol: '$',
             disambiguateSymbol: 'C$',
@@ -218,7 +219,7 @@ describe('Currency', () => {
         expect(currencies).toEqual({
           USD: {
             priority: 1,
-            isoCode: 'USD',
+            isoCode: USD,
             name: 'United States Dollar',
             symbol: '$',
             disambiguateSymbol: 'US$',
@@ -245,7 +246,7 @@ describe('Currency', () => {
         Currency.defaultStore = {
           CAD: {
             priority: 5,
-            isoCode: 'CAD',
+            isoCode: CAD,
             name: 'Canadian Dollar',
             symbol: '$',
             disambiguateSymbol: 'C$',
@@ -266,7 +267,7 @@ describe('Currency', () => {
         expect(Currency.store).toEqual({
           CAD: {
             priority: 5,
-            isoCode: 'CAD',
+            isoCode: CAD,
             name: 'Canadian Dollar',
             symbol: '$',
             disambiguateSymbol: 'C$',
@@ -306,10 +307,10 @@ describe('Currency', () => {
 
     describe('find()', () => {
       it('returns currency by iso code', () => {
-        const currency = Currency.find('CAD');
+        const currency = Currency.find(CAD);
 
         expect(currency).toBeDefined();
-        expect(currency?.isoCode).toEqual('CAD');
+        expect(currency?.isoCode).toEqual(CAD);
       });
 
       it('returns null when iso code is not found', () => {
@@ -358,7 +359,7 @@ describe('Currency', () => {
 
     describe('unregister()', () => {
       it('returns true when currency existed', () => {
-        const currency = new Currency('CAD');
+        const currency = new Currency(CAD);
         const unregistered = Currency.unregister(currency);
 
         expect(unregistered).toBeTruthy();
@@ -367,7 +368,7 @@ describe('Currency', () => {
       });
 
       it('returns false when currency did not exist', () => {
-        const currency = new Currency('CAD');
+        const currency = new Currency(CAD);
         Currency.unregister(currency);
         const unregistered = Currency.unregister(currency);
 
@@ -379,19 +380,19 @@ describe('Currency', () => {
 
     describe('wrap()', () => {
       it('returns currency from currency', () => {
-        const currency = Currency.wrap(new Currency('CAD'));
+        const currency = Currency.wrap(new Currency(CAD));
 
         expect(currency).toBeInstanceOf(Currency);
       });
 
       it('returns currency from string', () => {
-        const currency = Currency.wrap('CAD');
+        const currency = Currency.wrap(CAD);
 
         expect(currency).toBeInstanceOf(Currency);
       });
 
       it('returns currency from currency data', () => {
-        const currency = Currency.wrap({ isoCode: 'CAD' } as any);
+        const currency = Currency.wrap({ isoCode: CAD } as any);
 
         expect(currency).toBeInstanceOf(Currency);
       });
@@ -412,10 +413,10 @@ describe('Currency', () => {
 
   describe('constructor()', () => {
     it('initializes with properties', () => {
-      const currency = new Currency('CAD');
+      const currency = new Currency(CAD);
 
       expect(currency.priority).toEqual(5);
-      expect(currency.isoCode).toEqual('CAD');
+      expect(currency.isoCode).toEqual(CAD);
       expect(currency.name).toEqual('Canadian Dollar');
       expect(currency.symbol).toEqual('$');
       expect(currency.disambiguateSymbol).toEqual('C$');
@@ -432,7 +433,7 @@ describe('Currency', () => {
 
     it('uppercases the iso code', () => {
       const currency = new Currency('cad' as any);
-      expect(currency.isoCode).toEqual('CAD');
+      expect(currency.isoCode).toEqual(CAD);
     });
 
     it('throws unknown currency error when iso code is not found', () => {
@@ -444,25 +445,25 @@ describe('Currency', () => {
     it('throws when the currency store is empty', () => {
       Currency.clear();
 
-      expect(() => new Currency('USD')).toThrowError();
+      expect(() => new Currency(USD)).toThrowError();
 
       Currency.load(isoCurrencies);
     });
 
     it('#separator returns decimalMark mark', () => {
-      const currency = new Currency('CAD');
+      const currency = new Currency(CAD);
 
       expect(currency.separator).toEqual(currency.decimalMark);
     });
 
     it('#delimiter returns thousands separator', () => {
-      const currency = new Currency('CAD');
+      const currency = new Currency(CAD);
 
       expect(currency.delimiter).toEqual(currency.thousandsSeparator);
     });
 
     it('#code returns iso code', () => {
-      const currency = new Currency('CAD');
+      const currency = new Currency(CAD);
 
       expect(currency.code).toEqual(currency.isoCode);
     });
@@ -470,15 +471,15 @@ describe('Currency', () => {
 
   describe('eq()', () => {
     it('returns true when iso codes are the same', () => {
-      const currency1 = new Currency('CAD');
-      const currency2 = new Currency('CAD');
+      const currency1 = new Currency(CAD);
+      const currency2 = new Currency(CAD);
 
       expect(currency1.eq(currency2)).toBeTruthy();
     });
 
     it('returns false when iso codes are different', () => {
-      const currency1 = new Currency('CAD');
-      const currency2 = new Currency('USD');
+      const currency1 = new Currency(CAD);
+      const currency2 = new Currency(USD);
 
       expect(currency1.eq(currency2)).toBeFalsy();
     });
@@ -486,7 +487,7 @@ describe('Currency', () => {
 
   describe('toLocaleString()', () => {
     it('returns name', () => {
-      const currency = new Currency('CAD');
+      const currency = new Currency(CAD);
 
       expect(currency.toLocaleString()).toEqual('Canadian Dollar');
     });
@@ -494,9 +495,9 @@ describe('Currency', () => {
 
   describe('toString()', () => {
     it('returns iso code', () => {
-      const currency = new Currency('CAD');
+      const currency = new Currency(CAD);
 
-      expect(currency.toString()).toEqual('CAD');
+      expect(currency.toString()).toEqual(CAD);
     });
   });
 });
