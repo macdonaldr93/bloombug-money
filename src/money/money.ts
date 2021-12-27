@@ -26,6 +26,32 @@ export default class Money {
     return this.fractional;
   }
 
+  get dollars() {
+    return this.amount;
+  }
+
+  get amount() {
+    return this.fractional / BigInt(this.currency.subunitToUnit);
+  }
+
+  format(
+    locales?: string | string[],
+    options: Omit<Intl.NumberFormatOptions, 'style' | 'currency'> = {}
+  ) {
+    return this.formatter(locales, options).format(this.amount);
+  }
+
+  formatter(
+    locales?: string | string[],
+    options: Omit<Intl.NumberFormatOptions, 'style' | 'currency'> = {}
+  ) {
+    return new Intl.NumberFormat(locales, {
+      ...options,
+      style: 'currency',
+      currency: this.currency.isoCode,
+    });
+  }
+
   isEqual(other: Money) {
     return (
       this.fractional === other.fractional &&
