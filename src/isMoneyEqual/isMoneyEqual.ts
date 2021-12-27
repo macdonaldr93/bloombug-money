@@ -1,5 +1,5 @@
 import Money from '../money';
 
 export default function isMoneyEqual(money: Money, other: Money) {
-  return money.isEqual(other);
+  return money.eq(other);
 }

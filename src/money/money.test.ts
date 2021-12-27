@@ -70,7 +70,7 @@ describe('Money', () => {
 
       money.add(other);
 
-      expect(money.isEqual(new Money(800, 'CAD'))).toBeTruthy();
+      expect(money.eq(new Money(800, 'CAD'))).toBeTruthy();
     });
 
     it('throws when exchange rate is not found', () => {
@@ -90,7 +90,7 @@ describe('Money', () => {
 
       money.sub(other);
 
-      expect(money.isEqual(new Money(300, 'CAD'))).toBeTruthy();
+      expect(money.eq(new Money(300, 'CAD'))).toBeTruthy();
     });
 
     it('throws when exchange rate is not found', () => {
@@ -141,33 +141,33 @@ describe('Money', () => {
     });
   });
 
-  describe('isEqual()', () => {
+  describe('eq()', () => {
     it('returns true when money is same fractional and currency', () => {
       const money1 = new Money(400, 'CAD');
       const money2 = new Money(400, 'CAD');
 
-      expect(money1.isEqual(money2)).toBeTruthy();
+      expect(money1.eq(money2)).toBeTruthy();
     });
 
     it('returns false when money is same fractional and different currency', () => {
       const money1 = new Money(400, 'CAD');
       const money2 = new Money(400, 'USD');
 
-      expect(money1.isEqual(money2)).toBeFalsy();
+      expect(money1.eq(money2)).toBeFalsy();
     });
 
     it('returns false when money is different fractional and same currency', () => {
       const money1 = new Money(500, 'CAD');
       const money2 = new Money(400, 'CAD');
 
-      expect(money1.isEqual(money2)).toBeFalsy();
+      expect(money1.eq(money2)).toBeFalsy();
     });
 
     it('returns false when money is different fractional and different currency', () => {
       const money1 = new Money(500, 'CAD');
       const money2 = new Money(400, 'USD');
 
-      expect(money1.isEqual(money2)).toBeFalsy();
+      expect(money1.eq(money2)).toBeFalsy();
     });
   });
 

@@ -167,19 +167,19 @@ describe('Currency', () => {
     });
   });
 
-  describe('isEqual()', () => {
+  describe('eq()', () => {
     it('returns true when iso codes are the same', () => {
       const currency1 = new Currency('CAD');
       const currency2 = new Currency('CAD');
 
-      expect(currency1.isEqual(currency2)).toBeTruthy();
+      expect(currency1.eq(currency2)).toBeTruthy();
     });
 
     it('returns false when iso codes are different', () => {
       const currency1 = new Currency('CAD');
       const currency2 = new Currency('USD');
 
-      expect(currency1.isEqual(currency2)).toBeFalsy();
+      expect(currency1.eq(currency2)).toBeFalsy();
     });
   });
 

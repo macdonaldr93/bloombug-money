@@ -129,7 +129,7 @@ export default class Currency implements ICurrency {
     return this.isoCode;
   }
 
-  isEqual(other: Currency) {
+  eq(other: Currency) {
     return this.isoCode === other.isoCode;
   }
 

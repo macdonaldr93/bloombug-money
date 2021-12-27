@@ -35,26 +35,6 @@ export default class Money {
     return this.fractional / BigInt(this.currency.subunitToUnit);
   }
 
-  add(money: Money) {
-    if (!this.currency.isEqual(money.currency)) {
-      throw new UnknownRateError(
-        `No conversion rate known for '${this.currency.toString()}' -> '${money.currency.toString()}'`
-      );
-    }
-
-    this.fractional += money.fractional;
-  }
-
-  sub(money: Money) {
-    if (!this.currency.isEqual(money.currency)) {
-      throw new UnknownRateError(
-        `No conversion rate known for '${this.currency.toString()}' -> '${money.currency.toString()}'`
-      );
-    }
-
-    this.fractional -= money.fractional;
-  }
-
   format(
     locales?: string | string[],
     options: Omit<Intl.NumberFormatOptions, 'style' | 'currency'> = {}
@@ -73,11 +53,30 @@ export default class Money {
     });
   }
 
-  isEqual(other: Money) {
+  eq(other: Money) {
     return (
-      this.fractional === other.fractional &&
-      this.currency.isEqual(other.currency)
+      this.fractional === other.fractional && this.currency.eq(other.currency)
     );
+  }
+
+  add(money: Money) {
+    if (!this.currency.eq(money.currency)) {
+      throw new UnknownRateError(
+        `No conversion rate known for '${this.currency.toString()}' -> '${money.currency.toString()}'`
+      );
+    }
+
+    this.fractional += money.fractional;
+  }
+
+  sub(money: Money) {
+    if (!this.currency.eq(money.currency)) {
+      throw new UnknownRateError(
+        `No conversion rate known for '${this.currency.toString()}' -> '${money.currency.toString()}'`
+      );
+    }
+
+    this.fractional -= money.fractional;
   }
 
   toString() {
