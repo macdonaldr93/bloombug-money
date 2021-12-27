@@ -11,11 +11,11 @@ export default class Money {
   fractional: bigint;
 
   constructor(
-    fractional: number,
+    fractional: bigint | number,
     currency?: Currency | ICurrency | CurrencyCodeISO4217 | string | null,
     _: MoneyOptions = {}
   ) {
-    if (!isValueFinite(fractional)) {
+    if (!isValueFinite(Number(fractional))) {
       throw RangeError('fractional must be finite');
     }
 

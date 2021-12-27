@@ -10,9 +10,9 @@ export default function parseMoney(
     ? Currency.wrap(currency)
     : Money.defaultCurrency;
   const amountAsFloat =
-    typeof amount === 'number'
-      ? amount
-      : parseFloat(amount.replace(wrappedCurrency.thousandsSeparator, ''));
+    typeof amount === 'string'
+      ? parseFloat(amount.replace(wrappedCurrency.thousandsSeparator, ''))
+      : amount;
   const value = amountAsFloat * wrappedCurrency.subunitToUnit;
 
   return new Money(value, wrappedCurrency, options);
