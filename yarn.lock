@@ -1812,6 +1812,11 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
+bigdecimal.js@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/bigdecimal.js/-/bigdecimal.js-1.1.0.tgz#e09392b8881f3d290a6dd348a1ad05fbc4144edf"
+  integrity sha512-oQyDk72s4qcXUDO2zA6K/Tjo0x/Fwtlfk87UAfdY5/j0+oDCn4g72q2w/L9+fMoTxCjskR99CZJJA4dUrSop5Q==
+
 binary-extensions@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
