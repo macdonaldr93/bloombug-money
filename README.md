@@ -24,13 +24,19 @@ import { Money } from 'ts-money';
 const money = new Money(100, 'USD');
 //=> Money {fractional: 100, currency: 'USD'}
 
-money.format('en-US');
+money.add(new Money(100, 'USD'));
+//=> Money {fractional: 200, currency: 'USD'}
+
+money.sub(new Money(100, 'USD'));
+//=> Money {fractional: 100, currency: 'USD'}
+
+money.toString();
 //=> $1.00
 
 const moneyCad = new Money(10000, 'CAD');
 //=> Money {fractional: 10000, currency: 'CAD'}
 
-money.format('fr-FR', { currencyDisplay: 'narrowSymbol' });
+moneyCad.format('fr-FR', { currencyDisplay: 'narrowSymbol' });
 //=> 100,00 $
 
 money.isEqual(moneyCad);
@@ -46,7 +52,7 @@ money.isEqual(new Money(100, 'USD'));
 import { Currency } from 'ts-money';
 
 const currency = new Currency('USD');
-//=> Currency {isoCode: 'USD'}
+//=> 'USD'
 ```
 
 ## Why another money library?

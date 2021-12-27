@@ -1,0 +1,1 @@
+export { UnknownRateError } from './errors';

@@ -1,3 +1,4 @@
+import { UnknownRateError } from '../bank';
 import Currency, { CurrencyCodeISO4217, ICurrency } from '../currency';
 import { isValueFinite } from '../utilities/number';
 
@@ -34,6 +35,26 @@ export default class Money {
     return this.fractional / BigInt(this.currency.subunitToUnit);
   }
 
+  add(money: Money) {
+    if (!this.currency.isEqual(money.currency)) {
+      throw new UnknownRateError(
+        `No conversion rate known for '${this.currency.toString()}' -> '${money.currency.toString()}'`
+      );
+    }
+
+    this.fractional += money.fractional;
+  }
+
+  sub(money: Money) {
+    if (!this.currency.isEqual(money.currency)) {
+      throw new UnknownRateError(
+        `No conversion rate known for '${this.currency.toString()}' -> '${money.currency.toString()}'`
+      );
+    }
+
+    this.fractional -= money.fractional;
+  }
+
   format(
     locales?: string | string[],
     options: Omit<Intl.NumberFormatOptions, 'style' | 'currency'> = {}
@@ -57,5 +78,9 @@ export default class Money {
       this.fractional === other.fractional &&
       this.currency.isEqual(other.currency)
     );
+  }
+
+  toString() {
+    return this.formatter().format(this.amount);
   }
 }

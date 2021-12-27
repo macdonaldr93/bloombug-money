@@ -1,12 +1,6 @@
 import DefaultISOCurrencies from '../config/currency_iso.json';
+import { UnknownCurrencyError } from './errors';
 import { CurrencyCodeISO4217, ICurrency } from './types';
-
-export class UnknownCurrencyError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'UnknownCurrencyError';
-  }
-}
 
 export default class Currency implements ICurrency {
   static store: Record<string, ICurrency> = Currency.loadDefaultCurrencies();

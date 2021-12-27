@@ -1,4 +1,5 @@
-import Currency, { UnknownCurrencyError } from './currency';
+import Currency from './currency';
+import { UnknownCurrencyError } from './errors';
 
 describe('Currency', () => {
   describe('static', () => {

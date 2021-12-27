@@ -63,6 +63,46 @@ describe('Money', () => {
     });
   });
 
+  describe('add()', () => {
+    it('returns expected fractional', () => {
+      const money = new Money(400, 'CAD');
+      const other = new Money(400, 'CAD');
+
+      money.add(other);
+
+      expect(money.isEqual(new Money(800, 'CAD'))).toBeTruthy();
+    });
+
+    it('throws when exchange rate is not found', () => {
+      const money = new Money(400, 'CAD');
+      const other = new Money(400, 'USD');
+
+      expect(() => money.add(other)).toThrow(
+        "No conversion rate known for 'CAD' -> 'USD'"
+      );
+    });
+  });
+
+  describe('sub()', () => {
+    it('returns expected fractional', () => {
+      const money = new Money(400, 'CAD');
+      const other = new Money(100, 'CAD');
+
+      money.sub(other);
+
+      expect(money.isEqual(new Money(300, 'CAD'))).toBeTruthy();
+    });
+
+    it('throws when exchange rate is not found', () => {
+      const money = new Money(400, 'CAD');
+      const other = new Money(100, 'USD');
+
+      expect(() => money.sub(other)).toThrow(
+        "No conversion rate known for 'CAD' -> 'USD'"
+      );
+    });
+  });
+
   describe('formatter()', () => {
     it('returns formatter', () => {
       const money = new Money(400, 'CAD');
@@ -128,6 +168,14 @@ describe('Money', () => {
       const money2 = new Money(400, 'USD');
 
       expect(money1.isEqual(money2)).toBeFalsy();
+    });
+  });
+
+  describe('toString()', () => {
+    it('returns expected value', () => {
+      const money = new Money(400, 'CAD');
+
+      expect(money.toString()).toEqual('$4.00');
     });
   });
 });
