@@ -4,6 +4,7 @@ import { CAD, USD } from '../currencies';
 import Currency from '../currency';
 import Mint from '../mint';
 import Money from './money';
+import { Exchange } from '..';
 
 describe('Money', () => {
   const mint = new Mint({ currencies });
@@ -68,12 +69,34 @@ describe('Money', () => {
       expect(money).toEqualMoney(new Money(mint, 800, CAD));
     });
 
-    it('throws when exchange rate is not found', () => {
+    it('returns expected fractional with exchange', () => {
+      const mint2 = new Mint({ currencies, exchange: new Exchange() });
+      mint2.exchange?.addRate(USD, CAD, 1.26);
+
+      const money = new Money(mint2, 400, CAD);
+      const other = new Money(mint2, 400, USD);
+
+      money.add(other);
+
+      expect(money).toEqualMoney(new Money(mint, 904, CAD));
+    });
+
+    it('throws when exchange is not found', () => {
       const money = new Money(mint, 400, CAD);
       const other = new Money(mint, 400, USD);
 
       expect(() => money.add(other)).toThrow(
-        "No conversion rate known for 'CAD' -> 'USD'"
+        'You must instantiate an exchange for currency exchange'
+      );
+    });
+
+    it('throws when exchange rate is not found', () => {
+      const mint2 = new Mint({ currencies, exchange: new Exchange() });
+      const money = new Money(mint2, 400, CAD);
+      const other = new Money(mint2, 400, USD);
+
+      expect(() => money.add(other)).toThrow(
+        "No conversion rate known for 'USD' -> 'CAD'"
       );
     });
   });
@@ -88,12 +111,34 @@ describe('Money', () => {
       expect(money).toEqualMoney(new Money(mint, 300, CAD));
     });
 
-    it('throws when exchange rate is not found', () => {
+    it('returns expected fractional with exchange', () => {
+      const mint2 = new Mint({ currencies, exchange: new Exchange() });
+      mint2.exchange?.addRate(USD, CAD, 1.26);
+
+      const money = new Money(mint2, 400, CAD);
+      const other = new Money(mint2, 100, USD);
+
+      money.subtract(other);
+
+      expect(money).toEqualMoney(new Money(mint2, 526, CAD));
+    });
+
+    it('throws when exchange is not found', () => {
       const money = new Money(mint, 400, CAD);
-      const other = new Money(mint, 100, USD);
+      const other = new Money(mint, 400, USD);
 
       expect(() => money.subtract(other)).toThrow(
-        "No conversion rate known for 'CAD' -> 'USD'"
+        'You must instantiate an exchange for currency exchange'
+      );
+    });
+
+    it('throws when exchange rate is not found', () => {
+      const mint2 = new Mint({ currencies, exchange: new Exchange() });
+      const money = new Money(mint2, 400, CAD);
+      const other = new Money(mint2, 100, USD);
+
+      expect(() => money.subtract(other)).toThrow(
+        "No conversion rate known for 'USD' -> 'CAD'"
       );
     });
   });

@@ -1,6 +1,5 @@
 import { Big, BigDecimal } from 'bigdecimal.js';
 import Currency, { CurrencyCode } from '../currency';
-import { UnknownRateError } from '../exchange';
 import Mint from '../mint';
 import { isValueFinite } from '../utilities/number';
 
@@ -68,25 +67,33 @@ export default class Money {
   }
 
   add(money: Money) {
-    if (!this.currency.equals(money.currency)) {
-      throw new UnknownRateError(
-        `No conversion rate known for '${this.currency.toString()}' -> '${money.currency.toString()}'`
-      );
+    if (this.currency.equals(money.currency)) {
+      this.fractional = this.fractional.add(money.fractional);
+
+      return this;
     }
 
-    this.fractional = this.fractional.add(money.fractional);
+    if (!this.mint.exchange) {
+      throw new Error('You must instantiate an exchange for currency exchange');
+    }
+
+    this.add(this.mint.exchange.exchangeWith(money, this.currency.isoCode));
 
     return this;
   }
 
   subtract(money: Money) {
-    if (!this.currency.equals(money.currency)) {
-      throw new UnknownRateError(
-        `No conversion rate known for '${this.currency.toString()}' -> '${money.currency.toString()}'`
-      );
+    if (this.currency.equals(money.currency)) {
+      this.fractional = this.fractional.subtract(money.fractional);
+
+      return this;
     }
 
-    this.fractional = this.fractional.subtract(money.fractional);
+    if (!this.mint.exchange) {
+      throw new Error('You must instantiate an exchange for currency exchange');
+    }
+
+    this.add(this.mint.exchange.exchangeWith(money, this.currency.isoCode));
 
     return this;
   }
