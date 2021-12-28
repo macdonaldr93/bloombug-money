@@ -1,135 +1,38 @@
 import { UnknownCurrencyError } from './errors';
-import { CurrencyCodeISO4217, ICurrency, CurrencyLoader } from './types';
-import deepClone from '../utilities/deepClone';
+import { CurrencyCode } from './types';
+import Mint from '../mint';
 
-export default class Currency implements ICurrency {
-  static get defaultStore(): Record<string, ICurrency> {
-    return Currency._defaultStore;
-  }
-  static set defaultStore(currency: Record<string, ICurrency>) {
-    Currency._defaultStore = currency;
-    Currency.store = deepClone(currency);
-  }
-  static store: Record<string, ICurrency>;
-  private static _defaultStore: Record<string, ICurrency>;
-  private static instances = new Map<CurrencyCodeISO4217 | string, Currency>();
+export default class Currency {
+  readonly alternateSymbols?: string[] | null;
+  readonly decimalMark: string;
+  readonly disambiguateSymbol?: string | null;
+  readonly format?: string;
+  readonly htmlEntity: string;
+  readonly isoCode: CurrencyCode;
+  readonly isoNumeric?: string | null;
+  readonly name: string;
+  readonly priority: number;
+  readonly smallestDenomination?: number | null;
+  readonly subunit: string | null;
+  readonly subunitToUnit: number;
+  readonly symbol: string;
+  readonly symbolFirst: boolean;
+  readonly thousandsSeparator: string;
+  private readonly mint: Mint;
 
-  static async load(currencies: CurrencyLoader) {
-    if (typeof currencies === 'object') {
-      Currency.store = deepClone(currencies);
-    } else {
-      Currency.store = await currencies();
-    }
-  }
+  constructor(mint: Mint, isoCode: CurrencyCode) {
+    this.isoCode = isoCode;
+    this.mint = mint;
 
-  static toJSON() {
-    return deepClone(Currency.store);
-  }
-
-  static all(): Currency[] {
-    return Object.keys(Currency.store).map(
-      (isoCode: any) => new Currency(isoCode)
-    );
-  }
-
-  static find(isoCode: CurrencyCodeISO4217) {
-    let currency = null;
-
-    try {
-      currency = new Currency(isoCode);
-    } catch (err) {
-      currency = null;
+    if (this.mint.currencyCache.has(this.isoCode)) {
+      return this.mint.currencyCache.get(this.isoCode)!;
     }
 
-    return currency;
-  }
+    const data = this.mint.currencies[this.isoCode];
 
-  static register(data: ICurrency): Currency {
-    const isoCode = data.isoCode;
-
-    Currency.store[isoCode] = data;
-
-    const currency = new Currency(isoCode);
-
-    Currency.instances.delete(isoCode);
-    Currency.instances.set(isoCode, currency);
-
-    return Currency.instances.get(isoCode)!;
-  }
-
-  static unregister(currency: Currency): boolean {
-    const isoCode = currency.isoCode;
-    const hadCurrency = Currency.instances.has(isoCode);
-
-    delete Currency.store[isoCode];
-    Currency.instances.delete(isoCode);
-
-    return hadCurrency;
-  }
-
-  static reset(): boolean {
-    Currency.instances = new Map();
-    Currency.store = deepClone(Currency.defaultStore);
-
-    return true;
-  }
-
-  static clear(): boolean {
-    Currency.instances = new Map();
-    Currency.store = {};
-
-    return true;
-  }
-
-  static wrap(object: Currency | ICurrency | string): Currency {
-    if (object instanceof Currency) {
-      return object;
-    } else if (object && typeof object === 'string') {
-      return new Currency(object);
-    } else if (object && typeof object === 'object') {
-      return new Currency(object.isoCode);
-    } else {
-      throw new UnknownCurrencyError(`Unknown currency '${object}'`);
-    }
-  }
-
-  alternateSymbols?: string[] | null;
-  decimalMark: string;
-  disambiguateSymbol?: string | null;
-  format?: string;
-  htmlEntity: string;
-  isoCode: CurrencyCodeISO4217 | string;
-  isoNumeric?: string | null;
-  name: string;
-  priority: number;
-  smallestDenomination?: number | null;
-  subunit: string | null;
-  subunitToUnit: number;
-  symbol: string;
-  symbolFirst: boolean;
-  thousandsSeparator: string;
-
-  constructor(isoCode: CurrencyCodeISO4217 | string) {
-    if (Object.keys(Currency.store).length === 0) {
-      throw new Error(`You must call Currency.load() first. For example:
-
-import isoCurrencies from 'mint-fns/iso-currencies.json';
-
-Currency.load(isoCurrencies);
-      `);
-    }
-
-    if (Currency.instances.has(isoCode)) {
-      return Currency.instances.get(isoCode)!;
-    }
-
-    this.isoCode = isoCode.toUpperCase();
-
-    if (!Object.keys(Currency.store).includes(this.isoCode)) {
+    if (!data) {
       throw new UnknownCurrencyError(`Unknown currency '${this.isoCode}'`);
     }
-
-    const data = Currency.store[this.isoCode];
 
     this.alternateSymbols = data.alternateSymbols;
     this.decimalMark = data.decimalMark;
@@ -146,7 +49,7 @@ Currency.load(isoCurrencies);
     this.symbolFirst = data.symbolFirst;
     this.thousandsSeparator = data.thousandsSeparator;
 
-    Currency.instances.set(this.isoCode, this);
+    this.mint.currencyCache.set(this);
   }
 
   get separator() {
@@ -161,7 +64,7 @@ Currency.load(isoCurrencies);
     return this.isoCode;
   }
 
-  eq(other: Currency) {
+  equals(other: Currency) {
     return this.isoCode === other.isoCode;
   }
 
@@ -173,22 +76,3 @@ Currency.load(isoCurrencies);
     return this.isoCode;
   }
 }
-
-Currency.defaultStore = {
-  USD: {
-    priority: 1,
-    isoCode: 'USD',
-    name: 'United States Dollar',
-    symbol: '$',
-    disambiguateSymbol: 'US$',
-    alternateSymbols: ['US$'],
-    subunit: 'Cent',
-    subunitToUnit: 100,
-    symbolFirst: true,
-    htmlEntity: '$',
-    decimalMark: '.',
-    thousandsSeparator: ',',
-    isoNumeric: '840',
-    smallestDenomination: 1,
-  },
-};

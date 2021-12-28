@@ -1,6 +1,6 @@
 import { CurrencyCodeISO4217 } from '../currency';
 
-export interface IRateStore {
+export interface IExchangeStore {
   options: any;
   rates: { [key: string]: number };
 

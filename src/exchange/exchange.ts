@@ -1,30 +1,42 @@
-import { Big } from 'bigdecimal.js';
-import Currency, { CurrencyCodeISO4217, ICurrency } from '../currency';
+import { Big, BigDecimal } from 'bigdecimal.js';
+import Currency, { CurrencyCode } from '../currency';
+import Mint from '../mint';
 import Money from '../money';
-import { IRateStore, RateMemoryStore, UnknownRateError } from '../rates';
+import { UnknownRateError } from './errors';
+import ExchangeMemoryStore from './exchangeMemoryStore';
+import { IExchangeStore } from './types';
 
 export default class Exchange {
-  store: IRateStore;
+  mint?: Mint;
+  store: IExchangeStore;
 
-  constructor(store = new RateMemoryStore()) {
+  constructor(store = new ExchangeMemoryStore()) {
     this.store = store;
   }
 
-  exchangeWith(
-    money: Money,
-    to: Currency | ICurrency | CurrencyCodeISO4217 | string
-  ) {
-    const toCurrency = Currency.wrap(to);
+  useMint(mint: Mint) {
+    this.mint = mint;
+    mint.exchange = this;
 
-    if (money.currency.eq(toCurrency)) {
+    return mint;
+  }
+
+  exchangeWith(money: Money, to: CurrencyCode) {
+    if (!this.mint) {
+      throw new Error('You must initialize with a mint');
+    }
+
+    const toCurrency = this.mint.Currency(to);
+
+    if (money.currency.equals(toCurrency)) {
       return money;
     }
 
-    const rate = this.getRate(money.currency, toCurrency);
+    const rate = this.getRate(money.currency.isoCode, toCurrency.isoCode);
 
     if (rate) {
       const fractional = this.calculateFractional(money, toCurrency);
-      return new Money(this.exchange(fractional, rate), to);
+      return this.mint.Money(this.exchange(fractional, rate), to);
     }
 
     throw new UnknownRateError(
@@ -32,39 +44,39 @@ export default class Exchange {
     );
   }
 
-  exchange(fractional: bigint, rate: number) {
+  exchange(fractional: BigDecimal, rate: number) {
     return Big(fractional)
       .multiply(Big(rate))
       .toBigInt()
       .valueOf();
   }
 
-  addRate(
-    from: Currency | ICurrency | CurrencyCodeISO4217 | string,
-    to: Currency | ICurrency | CurrencyCodeISO4217 | string,
-    rate: number
-  ) {
+  addRate(from: CurrencyCode, to: CurrencyCode, rate: number) {
+    if (!this.mint) {
+      throw new Error('You must initialize with a mint');
+    }
+
     return this.store.addRate(
-      Currency.wrap(from).isoCode,
-      Currency.wrap(to).isoCode,
+      this.mint.Currency(from).isoCode,
+      this.mint.Currency(to).isoCode,
       rate
     );
   }
 
-  getRate(
-    from: Currency | ICurrency | CurrencyCodeISO4217 | string,
-    to: Currency | ICurrency | CurrencyCodeISO4217 | string
-  ) {
+  getRate(from: CurrencyCode, to: CurrencyCode) {
+    if (!this.mint) {
+      throw new Error('You must initialize with a mint');
+    }
+
     return this.store.getRate(
-      Currency.wrap(from).isoCode,
-      Currency.wrap(to).isoCode
+      this.mint.Currency(from).isoCode,
+      this.mint.Currency(to).isoCode
     );
   }
 
   calculateFractional(money: Money, to: Currency) {
-    return (
-      BigInt(money.fractional) /
-      (BigInt(money.currency.subunitToUnit) / BigInt(to.subunitToUnit))
+    return money.fractional.divide(
+      Big(money.currency.subunitToUnit).divide(Big(to.subunitToUnit))
     );
   }
 }

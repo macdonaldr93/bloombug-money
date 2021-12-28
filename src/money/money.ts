@@ -1,28 +1,39 @@
-import Currency, { CurrencyCodeISO4217, ICurrency } from '../currency';
-import { UnknownRateError } from '../rates';
+import { Big, BigDecimal } from 'bigdecimal.js';
+import Currency, { CurrencyCode } from '../currency';
+import { UnknownRateError } from '../exchange';
+import Mint from '../mint';
 import { isValueFinite } from '../utilities/number';
 
 export interface MoneyOptions {}
 
 export default class Money {
-  static defaultCurrency: Currency;
-
-  currency: Currency;
-  fractional: bigint;
+  readonly currency: Currency;
+  readonly mint: Mint;
+  fractional: BigDecimal;
 
   constructor(
-    fractional: bigint | number,
-    currency?: Currency | ICurrency | CurrencyCodeISO4217 | string | null,
-    _: MoneyOptions = {}
+    mint: Mint,
+    fractional: bigint | number = 0,
+    currency?: CurrencyCode | null
   ) {
     if (!isValueFinite(Number(fractional))) {
       throw RangeError('fractional must be finite');
     }
 
-    this.fractional = BigInt(fractional);
-    this.currency = currency ? Currency.wrap(currency) : Money.defaultCurrency;
+    this.mint = mint;
+    this.fractional = Big(fractional);
+    this.currency = currency
+      ? this.mint.Currency(currency)
+      : this.mint.defaultCurrency;
   }
 
+  get amount() {
+    return this.fractional
+      .divide(Big(this.currency.subunitToUnit))
+      .numberValue();
+  }
+
+  // Aliases
   get cents() {
     return this.fractional;
   }
@@ -31,15 +42,11 @@ export default class Money {
     return this.amount;
   }
 
-  get amount() {
-    return this.fractional / BigInt(this.currency.subunitToUnit);
-  }
-
   format(
     locales?: string | string[],
     options: Omit<Intl.NumberFormatOptions, 'style' | 'currency'> = {}
   ) {
-    return this.formatter(locales, options).format(Number(this.amount));
+    return this.formatter(locales, options).format(this.amount);
   }
 
   formatter(
@@ -53,32 +60,33 @@ export default class Money {
     });
   }
 
-  eq(other: Money) {
+  equals(other: Money) {
     return (
-      this.fractional === other.fractional && this.currency.eq(other.currency)
+      this.fractional.equals(other.fractional) &&
+      this.currency.equals(other.currency)
     );
   }
 
   add(money: Money) {
-    if (!this.currency.eq(money.currency)) {
+    if (!this.currency.equals(money.currency)) {
       throw new UnknownRateError(
         `No conversion rate known for '${this.currency.toString()}' -> '${money.currency.toString()}'`
       );
     }
 
-    this.fractional += money.fractional;
+    this.fractional = this.fractional.add(money.fractional);
 
     return this;
   }
 
-  sub(money: Money) {
-    if (!this.currency.eq(money.currency)) {
+  subtract(money: Money) {
+    if (!this.currency.equals(money.currency)) {
       throw new UnknownRateError(
         `No conversion rate known for '${this.currency.toString()}' -> '${money.currency.toString()}'`
       );
     }
 
-    this.fractional -= money.fractional;
+    this.fractional = this.fractional.subtract(money.fractional);
 
     return this;
   }
@@ -91,8 +99,6 @@ export default class Money {
   }
 
   toString() {
-    return this.formatter().format(Number(this.amount));
+    return this.format();
   }
 }
-
-Money.defaultCurrency = new Currency('USD');

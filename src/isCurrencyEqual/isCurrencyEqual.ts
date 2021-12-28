@@ -1,5 +1,5 @@
 import Currency from '../currency';
 
 export default function isCurrencyEqual(currency: Currency, other: Currency) {
-  return currency.eq(other);
+  return currency.equals(other);
 }

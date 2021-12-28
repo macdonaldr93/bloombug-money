@@ -19,7 +19,7 @@ export default function toEqualMoney(
   received: Money,
   expected: Money
 ) {
-  if (received.eq(expected)) {
+  if (received.equals(expected)) {
     return {
       pass: true,
       message: () =>

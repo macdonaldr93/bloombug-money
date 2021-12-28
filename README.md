@@ -5,13 +5,11 @@ The most comprehensive, yet simple and consistent toolset for manipulating JavaS
 ## Getting started
 
 ```js
-import { parseMoney } from 'mint-fns';
+import { Mint } from 'mint-fns';
 
-const money = parseMoney('1,000.24', 'USD');
-//=> Money {fractional: 100024, currency: 'USD'}
-
-money.format('en-US');
-//=> $4.00
+const { Money } = new Mint();
+const money = Money();
+//=> Money {fractional: 0, currency: 'USD'}
 ```
 
 ## Classes
@@ -19,24 +17,26 @@ money.format('en-US');
 ### Currency
 
 ```js
-import { Currency } from 'mint-fns';
+import { Mint } from 'mint-fns';
 
-const currency = new Currency('USD');
+const { Currency } = new Mint();
+const currency = Currency('USD');
 //=> 'USD'
 ```
 
 ### Money
 
 ```js
-import { Money } from 'mint-fns';
+import { Mint } from 'mint-fns';
 
-const money = new Money(100, 'USD');
+const { Money } = new Mint();
+const money = Money(100, 'USD');
 //=> Money {fractional: 100, currency: 'USD'}
 
-money.add(new Money(100, 'USD'));
+money.add(Money(100, 'USD'));
 //=> Money {fractional: 200, currency: 'USD'}
 
-money.sub(new Money(100, 'USD'));
+money.subtract(Money(100, 'USD'));
 //=> Money {fractional: 100, currency: 'USD'}
 
 money.toString();
@@ -45,30 +45,32 @@ money.toString();
 money.format('fr-FR', { currencyDisplay: 'narrowSymbol' });
 //=> 100,00 $
 
-money.eq(new Money(400, 'USD'));
+money.equals(Money(400, 'USD'));
 //=> false
 
-money.eq(new Money(100, 'USD'));
+money.equals(Money(100, 'USD'));
 //=> true
 ```
 
 ### Exchange
 
 ```js
-import { Currency, Exchange } from 'mint-fns';
-import isoCurrencies from 'mint-fns/iso-currencies.json';
+import { Mint, Exchange } from 'mint-fns';
+import { CAD, USD } from 'mint-fns/currencies';
+import currencies from 'mint-fns/iso-currencies.json';
 
-Currency.load(isoCurrencies);
+const { Currency, Money, exchange } = new Mint({
+  currencies,
+  exchange: new Exchange(),
+});
 
-const exchange = new Exchange();
+exchange.addRate(USD, CAD, 0.745);
 
-exchange.addRate('USD', 'CAD', 0.745);
+const money = new Money(100, USD);
+//=> Money {fractional: 100, currency: USD}
 
-const money = new Money(100, 'USD');
-//=> Money {fractional: 100, currency: 'USD'}
-
-exchange.exchangeWith(money, 'CAD');
-//=> Money {fractional: 74, currency: 'CAD'}
+exchange.exchangeWith(money, CAD);
+//=> Money {fractional: 74, currency: CAD}
 ```
 
 ## Why another money library?

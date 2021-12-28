@@ -170,6 +170,8 @@ export type CurrencyCodeISO4217 =
   | 'ZMK'
   | 'ZMW';
 
+export type CurrencyCode = CurrencyCodeISO4217 | string;
+
 export interface ICurrency {
   priority: number;
   isoCode: string;

@@ -1,0 +1,18 @@
+{
+  "USD": {
+    "priority": 1,
+    "isoCode": "USD",
+    "name": "United States Dollar",
+    "symbol": "$",
+    "disambiguateSymbol": "US$",
+    "alternateSymbols": ["US$"],
+    "subunit": "Cent",
+    "subunitToUnit": 100,
+    "symbolFirst": true,
+    "htmlEntity": "$",
+    "decimalMark": ".",
+    "thousandsSeparator": ",",
+    "isoNumeric": "840",
+    "smallestDenomination": 1
+  }
+}

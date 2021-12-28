@@ -1,9 +1,9 @@
 import { CurrencyCodeISO4217 } from '../currency';
-import { IRateStore } from './types';
+import { IExchangeStore } from './types';
 
 export interface StoreOptions {}
 
-export default class RateMemoryStore implements IRateStore {
+export default class ExchangeMemoryStore implements IExchangeStore {
   private static INDEX_KEY_SEPARATOR = '_TO_';
 
   options: StoreOptions;
@@ -39,7 +39,7 @@ export default class RateMemoryStore implements IRateStore {
     ) => any
   ) {
     Object.entries(this.rates).forEach(([key, rate]) => {
-      const [from, to] = key.split(RateMemoryStore.INDEX_KEY_SEPARATOR);
+      const [from, to] = key.split(ExchangeMemoryStore.INDEX_KEY_SEPARATOR);
 
       callback(from, to, rate);
     });
@@ -50,7 +50,7 @@ export default class RateMemoryStore implements IRateStore {
     to: CurrencyCodeISO4217 | string
   ) {
     return [from.toUpperCase(), to.toUpperCase()].join(
-      RateMemoryStore.INDEX_KEY_SEPARATOR
+      ExchangeMemoryStore.INDEX_KEY_SEPARATOR
     );
   }
 }
