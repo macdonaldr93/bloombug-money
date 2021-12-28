@@ -1,11 +1,11 @@
-# @mcdreamy/money
+# @bloombug/money
 
 The most comprehensive, yet simple and consistent toolset for manipulating JavaScript money and currency in a browser & Node.js.
 
 ## Getting started
 
 ```js
-import { Mint } from '@mcdreamy/money';
+import { Mint } from '@bloombug/money';
 
 const { Money } = new Mint();
 const money = Money();
@@ -17,7 +17,7 @@ const money = Money();
 ### Currency
 
 ```js
-import { Mint } from '@mcdreamy/money';
+import { Mint } from '@bloombug/money';
 
 const { Currency } = new Mint();
 const currency = Currency('USD');
@@ -27,7 +27,7 @@ const currency = Currency('USD');
 ### Money
 
 ```js
-import { Mint } from '@mcdreamy/money';
+import { Mint } from '@bloombug/money';
 
 const { Money } = new Mint();
 const money = Money(100, 'USD');
@@ -55,9 +55,9 @@ money.equals(Money(100, 'USD'));
 ### Exchange
 
 ```js
-import { Mint, Exchange } from '@mcdreamy/money';
-import { CAD, USD } from '@mcdreamy/money/currencies';
-import currencies from '@mcdreamy/money/iso-currencies.json';
+import { Mint, Exchange } from '@bloombug/money';
+import { CAD, USD } from '@bloombug/money/currencies';
+import currencies from '@bloombug/money/iso-currencies.json';
 
 const { Currency, Money, exchange } = new Mint({
   currencies,
@@ -75,4 +75,4 @@ exchange.exchangeWith(money, CAD);
 
 ## Why another money library?
 
-**@mcdreamy/money** makes money and currency feel like primitive types. As developers, we use money and currency all the time and yet they are poorly supported types and have difficult interfaces to work with. Money types range from integers to floats to strings without any standardization. **@mcdreamy/money** makes it easy to operate on these values and exchange between currencies.
+**@bloombug/money** makes money and currency feel like primitive types. As developers, we use money and currency all the time and yet they are poorly supported types and have difficult interfaces to work with. Money types range from integers to floats to strings without any standardization. **@bloombug/money** makes it easy to operate on these values and exchange between currencies.

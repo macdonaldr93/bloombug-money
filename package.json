@@ -31,7 +31,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "@mcdreamy/money",
+  "name": "@bloombug/money",
   "author": "Ryan Macdonald",
   "publishConfig": {
     "access": "restricted"
