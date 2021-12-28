@@ -1,5 +1,5 @@
 import { CurrencyCodeISO4217 } from '../currency';
-import { IExchangeStore } from './types';
+import { IExchangeStore, IRate } from './types';
 
 export interface StoreOptions {}
 
@@ -12,6 +12,10 @@ export default class ExchangeMemoryStore implements IExchangeStore {
   constructor(options: StoreOptions = {}, rates = {}) {
     this.options = options;
     this.rates = rates;
+  }
+
+  addRates(rates: IRate[]) {
+    return rates.map(({ from, to, rate }) => this.addRate(from, to, rate));
   }
 
   addRate(

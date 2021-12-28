@@ -1,30 +1,20 @@
-import { CurrencyCodeISO4217 } from '../currency';
+import { CurrencyCode } from '../currency';
+
+export interface IRate {
+  from: CurrencyCode;
+  to: CurrencyCode;
+  rate: number;
+}
 
 export interface IExchangeStore {
   options: any;
   rates: { [key: string]: number };
 
-  addRate(
-    from: CurrencyCodeISO4217 | string,
-    to: CurrencyCodeISO4217 | string,
-    rate: number
-  ): number;
-
-  getRate(
-    from: CurrencyCodeISO4217 | string,
-    to: CurrencyCodeISO4217 | string
-  ): number;
-
+  addRates(rates: IRate[]): number[];
+  addRate(from: CurrencyCode, to: CurrencyCode, rate: number): number;
+  getRate(from: CurrencyCode, to: CurrencyCode): number;
   eachRate(
-    callback: (
-      from: CurrencyCodeISO4217 | string,
-      to: CurrencyCodeISO4217 | string,
-      rate: number
-    ) => any
+    callback: (from: CurrencyCode, to: CurrencyCode, rate: number) => any
   ): void;
-
-  rateKeyFor(
-    from: CurrencyCodeISO4217 | string,
-    to: CurrencyCodeISO4217 | string
-  ): string;
+  rateKeyFor(from: CurrencyCode, to: CurrencyCode): string;
 }
