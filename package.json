@@ -31,19 +31,19 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "mint-fns",
+  "name": "@mcdreamy/money",
   "author": "Ryan Macdonald",
   "publishConfig": {
     "access": "restricted"
   },
-  "module": "dist/mint-fns.esm.js",
+  "module": "dist/money.esm.js",
   "size-limit": [
     {
-      "path": "dist/mint-fns.cjs.production.min.js",
+      "path": "dist/money.cjs.production.min.js",
       "limit": "14 KB"
     },
     {
-      "path": "dist/mint-fns.esm.js",
+      "path": "dist/money.esm.js",
       "limit": "14 KB"
     }
   ],
