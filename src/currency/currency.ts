@@ -3,15 +3,8 @@ import { CurrencyCodeISO4217, ICurrency, CurrencyLoader } from './types';
 import deepClone from '../utilities/deepClone';
 
 export default class Currency implements ICurrency {
-  static get defaultStore(): Record<string, ICurrency> {
-    return Currency._defaultStore;
-  }
-  static set defaultStore(currency: Record<string, ICurrency>) {
-    Currency._defaultStore = currency;
-    Currency.store = deepClone(currency);
-  }
+  static defaultStore: Record<string, ICurrency>;
   static store: Record<string, ICurrency>;
-  private static _defaultStore: Record<string, ICurrency>;
   private static instances = new Map<CurrencyCodeISO4217 | string, Currency>();
 
   static async load(currencies: CurrencyLoader) {
@@ -32,7 +25,7 @@ export default class Currency implements ICurrency {
     );
   }
 
-  static find(isoCode: CurrencyCodeISO4217) {
+  static find(isoCode: CurrencyCodeISO4217 | string) {
     let currency = null;
 
     try {
@@ -192,3 +185,5 @@ Currency.defaultStore = {
     smallestDenomination: 1,
   },
 };
+
+Currency.load(Currency.defaultStore);

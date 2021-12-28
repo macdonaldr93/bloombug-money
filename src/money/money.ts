@@ -1,26 +1,61 @@
-import Currency, { CurrencyCodeISO4217, ICurrency } from '../currency';
+import { USD } from '../currencies';
+import Currency, {
+  CurrencyCodeISO4217,
+  ICurrency,
+  UnknownCurrencyError,
+} from '../currency';
+import Exchange from '../exchange';
 import { UnknownRateError } from '../rates';
 import { isValueFinite } from '../utilities/number';
 
-export interface MoneyOptions {}
+export interface MoneyOptions {
+  defaultCurrency: CurrencyCodeISO4217 | string;
+}
 
 export default class Money {
   static defaultCurrency: Currency;
+  static exchange?: Exchange;
+
+  static configure(options: Partial<MoneyOptions> = {}) {
+    const resolvedOptions = {
+      defaultCurrency: USD,
+      ...options,
+    };
+
+    const currency = Currency.find(resolvedOptions.defaultCurrency);
+
+    if (!currency) {
+      throw new UnknownCurrencyError(
+        `You must register '${resolvedOptions.defaultCurrency}' currency.
+Currency.register({
+  ${resolvedOptions.defaultCurrency}: {
+    isoCode: '${resolvedOptions.defaultCurrency}',
+    // the rest of your currency
+  },
+})`
+      );
+    }
+
+    Money.defaultCurrency = new Currency(resolvedOptions.defaultCurrency);
+  }
+
+  static reset() {
+    Money.defaultCurrency = new Currency(USD);
+  }
 
   currency: Currency;
   fractional: bigint;
 
   constructor(
     fractional: bigint | number,
-    currency?: Currency | ICurrency | CurrencyCodeISO4217 | string | null,
-    _: MoneyOptions = {}
+    currency?: Currency | ICurrency | CurrencyCodeISO4217 | string | null
   ) {
     if (!isValueFinite(Number(fractional))) {
       throw RangeError('fractional must be finite');
     }
 
     this.fractional = BigInt(fractional);
-    this.currency = currency ? Currency.wrap(currency) : Money.defaultCurrency;
+    this.currency = Currency.wrap(currency || Money.defaultCurrency.isoCode);
   }
 
   get cents() {
@@ -60,13 +95,21 @@ export default class Money {
   }
 
   add(money: Money) {
-    if (!this.currency.eq(money.currency)) {
-      throw new UnknownRateError(
-        `No conversion rate known for '${this.currency.toString()}' -> '${money.currency.toString()}'`
+    if (this.currency.eq(money.currency)) {
+      this.fractional += money.fractional;
+
+      return this;
+    }
+
+    if (!Money.exchange) {
+      throw new Error(
+        `You must initialize an exchange to support multi-currency arithmetic.
+
+Money.exchange = new Exchange();`
       );
     }
 
-    this.fractional += money.fractional;
+    this.add(Money.exchange.exchangeWith(money, this.currency));
 
     return this;
   }
@@ -95,4 +138,4 @@ export default class Money {
   }
 }
 
-Money.defaultCurrency = new Currency('USD');
+Money.configure();

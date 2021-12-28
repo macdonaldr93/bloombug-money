@@ -1,6 +1,7 @@
 import isoCurrencies from '../iso-currencies.json';
 import { CAD, USD } from '../currencies';
 import Currency from '../currency';
+import Exchange from '../exchange';
 import Money from '../money';
 import addMoney from './addMoney';
 
@@ -17,11 +18,15 @@ describe('addMoney', () => {
   });
 
   it('throws when exchange rate is not found', () => {
+    Money.exchange = new Exchange();
+
     const money = new Money(400, CAD);
     const other = new Money(400, USD);
 
     expect(() => addMoney(money, other)).toThrow(
-      "No conversion rate known for 'CAD' -> 'USD'"
+      "No conversion rate known for 'USD' -> 'CAD'"
     );
+
+    Money.exchange = undefined;
   });
 });

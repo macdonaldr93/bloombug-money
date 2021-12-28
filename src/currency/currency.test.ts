@@ -13,48 +13,6 @@ describe('Currency', () => {
       it('returns USD by default', () => {
         expect(Currency.defaultStore).toEqual({ USD: isoCurrencies[USD] });
       });
-
-      it('reinitializes the store when changed', () => {
-        Currency.defaultStore = {
-          CAD: {
-            priority: 5,
-            isoCode: CAD,
-            name: 'Canadian Dollar',
-            symbol: '$',
-            disambiguateSymbol: 'C$',
-            alternateSymbols: ['C$', 'CAD$'],
-            subunit: 'Cent',
-            subunitToUnit: 100,
-            symbolFirst: true,
-            htmlEntity: '$',
-            decimalMark: '.',
-            thousandsSeparator: ',',
-            isoNumeric: '124',
-            smallestDenomination: 5,
-          },
-        };
-
-        expect(Currency.store).toEqual({
-          CAD: {
-            priority: 5,
-            isoCode: CAD,
-            name: 'Canadian Dollar',
-            symbol: '$',
-            disambiguateSymbol: 'C$',
-            alternateSymbols: ['C$', 'CAD$'],
-            subunit: 'Cent',
-            subunitToUnit: 100,
-            symbolFirst: true,
-            htmlEntity: '$',
-            decimalMark: '.',
-            thousandsSeparator: ',',
-            isoNumeric: '124',
-            smallestDenomination: 5,
-          },
-        });
-
-        Currency.defaultStore = { USD: isoCurrencies[USD] };
-      });
     });
 
     describe('load()', () => {

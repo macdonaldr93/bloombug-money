@@ -1,11 +1,50 @@
 import isoCurrencies from '../iso-currencies.json';
 import { CAD, USD } from '../currencies';
 import Currency from '../currency';
+import Exchange from '../exchange';
 import Money from './money';
 
 describe('Money', () => {
   beforeAll(() => {
     Currency.load(isoCurrencies);
+  });
+
+  describe('static', () => {
+    describe('configure()', () => {
+      it('returns expected default options', () => {
+        Money.configure({});
+
+        expect(Money.defaultCurrency).toEqualCurrency(new Currency(USD));
+      });
+
+      it('returns expected default currency', () => {
+        Money.configure({
+          defaultCurrency: CAD,
+        });
+
+        expect(Money.defaultCurrency).toEqualCurrency(new Currency(CAD));
+
+        Money.reset();
+      });
+
+      it('returns throws when currency is unknown', () => {
+        expect(() =>
+          Money.configure({
+            defaultCurrency: 'FOO',
+          })
+        ).toThrowError();
+
+        Money.reset();
+      });
+    });
+
+    describe('reset()', () => {
+      it('resets default currency to USD', () => {
+        Money.reset();
+
+        expect(Money.defaultCurrency).toEqualCurrency(new Currency(USD));
+      });
+    });
   });
 
   describe('#currency', () => {
@@ -79,13 +118,31 @@ describe('Money', () => {
       expect(money).toEqualMoney(new Money(800, CAD));
     });
 
+    it('returns expected multi-currency fractional', () => {
+      Money.exchange = new Exchange();
+      Money.exchange.addRate(CAD, USD, 0.78);
+
+      const money = new Money(400, USD);
+      const other = new Money(400, CAD);
+
+      money.add(other);
+
+      expect(money).toEqualMoney(new Money(713, USD));
+
+      Money.exchange = undefined;
+    });
+
     it('throws when exchange rate is not found', () => {
+      Money.exchange = new Exchange();
+
       const money = new Money(400, CAD);
       const other = new Money(400, USD);
 
       expect(() => money.add(other)).toThrow(
-        "No conversion rate known for 'CAD' -> 'USD'"
+        "No conversion rate known for 'USD' -> 'CAD'"
       );
+
+      Money.exchange = undefined;
     });
   });
 
@@ -197,9 +254,9 @@ describe('Money', () => {
 
   describe('toString()', () => {
     it('returns expected value', () => {
-      const money = new Money(400, CAD);
+      const money = new Money(411, CAD);
 
-      expect(money.toString()).toEqual('$4.00');
+      expect(money.toString()).toEqual('$4.11');
     });
   });
 });
