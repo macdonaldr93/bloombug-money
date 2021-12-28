@@ -1,6 +1,7 @@
 export {
   default as Currency,
   CurrencyCache,
+  CurrencyCode,
   CurrencyCodeISO4217,
   ICurrency,
   UnknownCurrencyError,
@@ -8,8 +9,9 @@ export {
 export {
   default as Exchange,
   IExchangeStore,
+  IRate,
   ExchangeMemoryStore,
   UnknownRateError,
 } from './exchange';
-export { default as Mint, MintOptions } from './mint';
-export { default as Money, MoneyOptions } from './money';
+export { default as Mint, MintConstructor } from './mint';
+export { default as Money } from './money';

@@ -3,8 +3,6 @@ import Currency, { CurrencyCode } from '../currency';
 import Mint from '../mint';
 import { isValueFinite } from '../utilities/number';
 
-export interface MoneyOptions {}
-
 export default class Money {
   readonly currency: Currency;
   readonly mint: Mint;

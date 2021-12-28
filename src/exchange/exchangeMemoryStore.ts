@@ -1,17 +1,15 @@
 import { CurrencyCodeISO4217 } from '../currency';
 import { IExchangeStore, IRate } from './types';
 
-export interface StoreOptions {}
-
 export default class ExchangeMemoryStore implements IExchangeStore {
   private static INDEX_KEY_SEPARATOR = '_TO_';
 
-  options: StoreOptions;
   rates: { [key: string]: number };
+  options: any;
 
-  constructor(options: StoreOptions = {}, rates = {}) {
-    this.options = options;
+  constructor(rates = {}, options = {}) {
     this.rates = rates;
+    this.options = options;
   }
 
   addRates(rates: IRate[]) {

@@ -9,7 +9,7 @@ import { USD } from '../currencies';
 import Exchange from '../exchange';
 import Money from '../money';
 
-export interface MintOptions {
+export interface MintConstructor {
   defaultCurrency?: CurrencyCode | string;
   currencies?: Record<CurrencyCode | string, ICurrency>;
   currencyCache?: CurrencyCache;
@@ -27,7 +27,7 @@ export default class Mint {
     currencyCache = new CurrencyCache(),
     defaultCurrency = USD,
     exchange,
-  }: MintOptions = {}) {
+  }: MintConstructor = {}) {
     if (!currencies[defaultCurrency]) {
       throw new UnknownCurrencyError(
         `Default currency '${defaultCurrency}' must be defined in currencies`

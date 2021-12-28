@@ -3,4 +3,4 @@ import Exchange from './exchange';
 export default Exchange;
 export { UnknownRateError } from './errors';
 export { default as ExchangeMemoryStore } from './exchangeMemoryStore';
-export { IExchangeStore } from './types';
+export { IExchangeStore, IRate } from './types';

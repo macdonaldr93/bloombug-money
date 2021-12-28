@@ -6,9 +6,9 @@ export interface IRate {
   rate: number;
 }
 
-export interface IExchangeStore {
-  options: any;
+export interface IExchangeStore<Options = any> {
   rates: { [key: string]: number };
+  options: Options;
 
   addRates(rates: IRate[]): number[];
   addRate(from: CurrencyCode, to: CurrencyCode, rate: number): number;

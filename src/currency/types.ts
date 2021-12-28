@@ -189,7 +189,3 @@ export interface ICurrency {
   isoNumeric?: string | null;
   smallestDenomination?: number | null;
 }
-
-export type CurrencyLoader =
-  | Record<string, ICurrency>
-  | (() => Promise<Record<string, ICurrency>>);
