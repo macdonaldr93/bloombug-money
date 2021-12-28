@@ -32,8 +32,10 @@
     "trailingComma": "es5"
   },
   "name": "mint-fns",
-  "private": true,
   "author": "Ryan Macdonald",
+  "publishConfig": {
+    "access": "restricted"
+  },
   "module": "dist/mint-fns.esm.js",
   "size-limit": [
     {
