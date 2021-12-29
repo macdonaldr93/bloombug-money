@@ -8,7 +8,7 @@
     "iso-currencies.json"
   ],
   "engines": {
-    "node": ">=10"
+    "node": "^12.0.0 || ^14.0.0 || >=16.0.0"
   },
   "scripts": {
     "start": "tsdx watch",
@@ -56,14 +56,15 @@
     ]
   },
   "devDependencies": {
-    "@size-limit/preset-small-lib": "7.0.5",
-    "@size-limit/webpack": "7.0.5",
-    "@size-limit/webpack-why": "7.0.5",
-    "husky": "7.0.4",
-    "size-limit": "7.0.5",
-    "tsdx": "0.14.1",
-    "tslib": "2.3.1",
-    "typescript": "4.5.4"
+    "@size-limit/preset-small-lib": "^7.0.5",
+    "@size-limit/webpack": "^7.0.5",
+    "@size-limit/webpack-why": "^7.0.5",
+    "husky": "^7.0.4",
+    "size-limit": "^7.0.5",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.5.4",
+    "webpack": "^5.65.0"
   },
   "dependencies": {
     "bigdecimal.js": "^1.1.0"

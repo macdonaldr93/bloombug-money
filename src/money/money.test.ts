@@ -243,7 +243,7 @@ describe('Money', () => {
 
   describe('toString()', () => {
     it('returns expected value', () => {
-      const money = new Money(mint, 400, CAD);
+      const money = new Money(mint, 400, USD);
 
       expect(money.toString()).toEqual('$4.00');
     });
