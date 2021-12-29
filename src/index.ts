@@ -1,3 +1,4 @@
+export * from './currencies';
 export {
   default as Currency,
   CurrencyCache,
@@ -6,6 +7,7 @@ export {
   ICurrency,
   UnknownCurrencyError,
 } from './currency';
+export { default as defaultCurrencies } from './default-currencies.json';
 export {
   default as Exchange,
   IExchangeStore,
@@ -13,5 +15,6 @@ export {
   ExchangeMemoryStore,
   UnknownRateError,
 } from './exchange';
+export { default as isoCurrencies } from './iso-currencies.json';
 export { default as Mint, MintConstructor } from './mint';
 export { default as Money } from './money';
