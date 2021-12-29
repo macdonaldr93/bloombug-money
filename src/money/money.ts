@@ -10,18 +10,27 @@ export default class Money {
 
   constructor(
     mint: Mint,
-    fractional: bigint | number = 0,
+    fractional: bigint | number | string = 0,
     currency?: CurrencyCode | null
   ) {
-    if (!isValueFinite(Number(fractional))) {
-      throw RangeError('fractional must be finite');
-    }
-
     this.mint = mint;
-    this.fractional = Big(fractional);
     this.currency = currency
       ? this.mint.Currency(currency)
       : this.mint.defaultCurrency;
+
+    let resolvedFractional = fractional;
+
+    if (typeof fractional === 'string') {
+      resolvedFractional =
+        parseFloat(fractional.replace(this.currency.thousandsSeparator, '')) *
+        this.currency.subunitToUnit;
+    }
+
+    if (!isValueFinite(Number(resolvedFractional))) {
+      throw RangeError('fractional must be finite');
+    }
+
+    this.fractional = Big(resolvedFractional);
   }
 
   get amount() {

@@ -30,6 +30,18 @@ describe('Money', () => {
       expect(money.fractional).toEqual(Big(400));
     });
 
+    it('returns expected value from string', () => {
+      const money = new Money(mint, '400', CAD);
+
+      expect(money.fractional).toEqual(Big(40000));
+    });
+
+    it('returns expected value from with string thousands', () => {
+      const money = new Money(mint, '4,000.19', CAD);
+
+      expect(money.fractional).toEqual(Big(400019));
+    });
+
     it('throws when value is infinite', () => {
       const infinite = 4 / 0;
 
