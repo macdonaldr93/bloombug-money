@@ -2,7 +2,6 @@ import { Big, BigDecimal } from 'bigdecimal.js';
 import Currency, { CurrencyCode } from '../currency';
 import Mint from '../mint';
 import Money from '../money';
-import { UnknownRateError } from './errors';
 import ExchangeMemoryStore from './exchangeMemoryStore';
 import { IExchangeStore } from './types';
 
@@ -33,15 +32,9 @@ export default class Exchange {
     }
 
     const rate = this.getRate(money.currency.isoCode, toCurrency.isoCode);
+    const fractional = this.calculateFractional(money, toCurrency);
 
-    if (rate) {
-      const fractional = this.calculateFractional(money, toCurrency);
-      return this.mint.Money(this.exchange(fractional, rate), to);
-    }
-
-    throw new UnknownRateError(
-      `No conversion rate known for '${money.currency.toString()}' -> '${toCurrency.toString()}'`
-    );
+    return this.mint.Money(this.exchange(fractional, rate), to);
   }
 
   exchange(fractional: BigDecimal, rate: number) {
@@ -74,7 +67,7 @@ export default class Exchange {
     );
   }
 
-  calculateFractional(money: Money, to: Currency) {
+  private calculateFractional(money: Money, to: Currency) {
     return money.fractional.divide(
       Big(money.currency.subunitToUnit).divide(Big(to.subunitToUnit))
     );

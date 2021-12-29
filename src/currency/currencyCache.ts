@@ -37,8 +37,8 @@ export default class CurrencyCache {
     return this.store.set(currency.code, currency);
   }
 
-  delete(currency: Currency) {
-    return this.store.delete(currency.code);
+  delete(code: CurrencyCode) {
+    return this.store.delete(code);
   }
 
   clear() {

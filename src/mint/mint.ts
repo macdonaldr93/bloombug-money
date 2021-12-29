@@ -29,9 +29,7 @@ export default class Mint {
     exchange,
   }: MintConstructor = {}) {
     if (!currencies[defaultCurrency]) {
-      throw new UnknownCurrencyError(
-        `Default currency '${defaultCurrency}' must be defined in currencies`
-      );
+      throw new UnknownCurrencyError(defaultCurrency);
     }
 
     this.currencies = currencies;

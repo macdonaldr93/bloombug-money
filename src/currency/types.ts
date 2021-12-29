@@ -175,7 +175,7 @@ export type CurrencyCode = CurrencyCodeISO4217 | string;
 export interface ICurrency {
   priority: number;
   isoCode: string;
-  name: string;
+  name?: string | null;
   symbol: string;
   disambiguateSymbol?: string | null;
   alternateSymbols?: string[] | null;

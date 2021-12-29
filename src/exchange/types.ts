@@ -16,5 +16,4 @@ export interface IExchangeStore<Options = any> {
   eachRate(
     callback: (from: CurrencyCode, to: CurrencyCode, rate: number) => any
   ): void;
-  rateKeyFor(from: CurrencyCode, to: CurrencyCode): string;
 }

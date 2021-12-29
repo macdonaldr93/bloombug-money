@@ -39,11 +39,11 @@ export default class Money {
       .numberValue();
   }
 
-  // Aliases
   get cents() {
-    return this.fractional;
+    return this.fractional.numberValue();
   }
 
+  // Aliases
   get dollars() {
     return this.amount;
   }

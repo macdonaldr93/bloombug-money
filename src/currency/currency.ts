@@ -10,7 +10,7 @@ export default class Currency {
   readonly htmlEntity: string;
   readonly isoCode: CurrencyCode;
   readonly isoNumeric?: string | null;
-  readonly name: string;
+  readonly name?: string | null;
   readonly priority: number;
   readonly smallestDenomination?: number | null;
   readonly subunit: string | null;
@@ -31,7 +31,7 @@ export default class Currency {
     const data = this.mint.currencies[this.isoCode];
 
     if (!data) {
-      throw new UnknownCurrencyError(`Unknown currency '${this.isoCode}'`);
+      throw new UnknownCurrencyError(this.isoCode);
     }
 
     this.alternateSymbols = data.alternateSymbols;
@@ -69,7 +69,7 @@ export default class Currency {
   }
 
   toLocaleString() {
-    return this.name || this.isoCode;
+    return this.name ?? this.isoCode;
   }
 
   toString() {

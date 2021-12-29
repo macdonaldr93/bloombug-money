@@ -5,6 +5,7 @@
     "target": "es5",
     "resolveJsonModule": true,
     "strictPropertyInitialization": false,
+    "downlevelIteration": true,
     "module": "esnext",
     "lib": ["dom", "esnext"],
     "importHelpers": true,

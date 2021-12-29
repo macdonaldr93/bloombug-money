@@ -53,7 +53,7 @@ describe('Money', () => {
     it('#cents alias returns exepcted value', () => {
       const money = new Money(mint, 400, CAD);
 
-      expect(money.cents).toEqual(Big(400));
+      expect(money.cents).toEqual(400);
     });
   });
 

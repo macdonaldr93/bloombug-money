@@ -1,4 +1,5 @@
 import { CurrencyCodeISO4217 } from '../currency';
+import { UnknownRateError } from './errors';
 import { IExchangeStore, IRate } from './types';
 
 export default class ExchangeMemoryStore implements IExchangeStore {
@@ -7,9 +8,13 @@ export default class ExchangeMemoryStore implements IExchangeStore {
   rates: { [key: string]: number };
   options: any;
 
-  constructor(rates = {}, options = {}) {
-    this.rates = rates;
+  constructor(rates?: IRate[], options = {}) {
+    this.rates = {};
     this.options = options;
+
+    if (rates && rates.length > 0) {
+      this.addRates(rates);
+    }
   }
 
   addRates(rates: IRate[]) {
@@ -30,7 +35,13 @@ export default class ExchangeMemoryStore implements IExchangeStore {
     from: CurrencyCodeISO4217 | string,
     to: CurrencyCodeISO4217 | string
   ) {
-    return this.rates[this.rateKeyFor(from, to)];
+    const rate = this.rates[this.rateKeyFor(from, to)];
+
+    if (!rate) {
+      throw new UnknownRateError(from, to);
+    }
+
+    return rate;
   }
 
   eachRate(
@@ -47,7 +58,7 @@ export default class ExchangeMemoryStore implements IExchangeStore {
     });
   }
 
-  rateKeyFor(
+  private rateKeyFor(
     from: CurrencyCodeISO4217 | string,
     to: CurrencyCodeISO4217 | string
   ) {

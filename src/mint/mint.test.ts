@@ -41,7 +41,7 @@ describe('Mint', () => {
 
   it('throws when default currency is not defined in currencies', () => {
     expect(() => new Mint({ defaultCurrency: CAD })).toThrow(
-      "Default currency 'CAD' must be defined in currencies"
+      "Unknown currency 'CAD'"
     );
   });
 
