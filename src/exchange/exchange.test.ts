@@ -1,4 +1,4 @@
-import currencies from '../iso-currencies.json';
+import currencies from '../test/iso-currencies.json';
 import { CAD, USD } from '../currencies';
 import Mint from '../mint';
 import Money from '../money';

@@ -5,7 +5,7 @@
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
-    "src"
+    "iso-currencies.json"
   ],
   "engines": {
     "node": ">=10"

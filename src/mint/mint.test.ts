@@ -2,7 +2,7 @@ import { CAD, USD } from '../currencies';
 import { CurrencyCache } from '../currency';
 import defaultCurrencies from '../default-currencies.json';
 import Exchange from '../exchange';
-import currencies from '../iso-currencies.json';
+import currencies from '../test/iso-currencies.json';
 import Mint from './mint';
 
 describe('Mint', () => {
