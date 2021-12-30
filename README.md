@@ -29,7 +29,7 @@ yarn add @bloombug/money
 
 ## Docs
 
-See [bloombug.io/money](https://bloombug.io/money) for more details, API, and other docs.
+See [docs site](https://macdonaldr93.github.io/bloombug-money/#/) for more details, API, and other docs.
 
 ## Examples
 
