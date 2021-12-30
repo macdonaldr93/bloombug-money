@@ -1,6 +1,6 @@
 # @bloombug/money
 
-The most comprehensive, yet simple and consistent library for manipulating JavaScript money and currency in a browser & Node.js.
+A simple and consistent library for dealing with JavaScript money and currency in a browser & Node.js.
 
 ```js
 import { Mint } from '@bloombug/money';
