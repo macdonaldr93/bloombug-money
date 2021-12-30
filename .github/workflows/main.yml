@@ -19,6 +19,9 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - name: Setup Intl
+        run: npm install -g full-icu
+
       - name: Install deps and build (with cache)
         uses: bahmutov/npm-install@v1
 
