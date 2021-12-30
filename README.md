@@ -1,5 +1,7 @@
 # @bloombug/money
 
+[![Coverage Status](https://coveralls.io/repos/github/macdonaldr93/bloombug-money/badge.svg?branch=main)](https://coveralls.io/github/macdonaldr93/bloombug-money?branch=main)
+
 A simple and consistent library for dealing with JavaScript money and currency in a browser & Node.js.
 
 ```js
