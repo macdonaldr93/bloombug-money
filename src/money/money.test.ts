@@ -257,10 +257,10 @@ describe('Money', () => {
     });
 
     it('returns expected value with different default locale', () => {
-      const mint2 = new Mint({ defaultLocale: 'fr-FR' });
+      const mint2 = new Mint({ defaultLocale: 'en-CA' });
       const money = new Money(mint2, 400, USD);
 
-      expect(money.toString()).toEqual('4,00 $US');
+      expect(money.toString()).toEqual('US$4.00');
     });
   });
 });
