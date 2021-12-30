@@ -29,7 +29,24 @@ jobs:
         run: yarn lint
 
       - name: Test
-        run: yarn test --ci --coverage --maxWorkers=2
+        run: yarn test --ci --coverage --maxWorkers=2 && coveralls < coverage/lcov.info
+
+      - name: Coveralls Parallel
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.github_token }}
+          flag-name: run-${{ matrix.test_number }}
+          parallel: true
 
       - name: Build
         run: yarn build
+
+  finish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.github_token }}
+          parallel-finished: true

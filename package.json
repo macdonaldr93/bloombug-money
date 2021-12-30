@@ -56,6 +56,7 @@
     "@size-limit/preset-small-lib": "^7.0.5",
     "@size-limit/webpack": "^7.0.5",
     "@size-limit/webpack-why": "^7.0.5",
+    "coveralls": "3.1.1",
     "husky": "^7.0.4",
     "size-limit": "^7.0.5",
     "tsdx": "^0.14.1",
