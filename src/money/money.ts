@@ -1,6 +1,7 @@
 import { Big, BigDecimal } from 'bigdecimal.js';
 import Currency, { CurrencyCode } from '../currency';
 import Mint from '../mint';
+import { createIntlNumberFormatter } from '../utilities/formatter';
 import { isValueFinite } from '../utilities/number';
 
 export default class Money {
@@ -49,21 +50,17 @@ export default class Money {
   }
 
   format(
-    locales?: string | string[],
+    locales: string | string[] = this.mint.defaultLocale,
     options: Omit<Intl.NumberFormatOptions, 'style' | 'currency'> = {}
   ) {
     return this.formatter(locales, options).format(this.amount);
   }
 
   formatter(
-    locales?: string | string[],
+    locales: string | string[] = this.mint.defaultLocale,
     options: Omit<Intl.NumberFormatOptions, 'style' | 'currency'> = {}
   ) {
-    return new Intl.NumberFormat(locales, {
-      ...options,
-      style: 'currency',
-      currency: this.currency.isoCode,
-    });
+    return createIntlNumberFormatter(locales, this.currency.isoCode, options);
   }
 
   equals(other: Money) {
