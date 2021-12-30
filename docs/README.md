@@ -140,7 +140,7 @@ const { Currency } = new Mint({ currencies });
 
 ## Examples
 
-[View examples on GitHub](https://github.com/macdonaldr93/bloombug-money/examples)
+[View examples on GitHub](https://github.com/macdonaldr93/bloombug-money/tree/main/examples)
 
 ## Acknowledgements
 
