@@ -100,9 +100,15 @@ export default class Money {
       throw new Error('You must instantiate an exchange for currency exchange');
     }
 
-    this.add(this.mint.exchange.exchangeWith(money, this.currency.isoCode));
+    this.subtract(
+      this.mint.exchange.exchangeWith(money, this.currency.isoCode)
+    );
 
     return this;
+  }
+
+  toNumber() {
+    return this.fractional.numberValue();
   }
 
   toLocaleString(
@@ -113,6 +119,6 @@ export default class Money {
   }
 
   toString() {
-    return this.format();
+    return this.format(this.mint.defaultLocale);
   }
 }

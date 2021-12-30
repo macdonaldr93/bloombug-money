@@ -1,78 +1,36 @@
 # @bloombug/money
 
-The most comprehensive, yet simple and consistent toolset for manipulating JavaScript money and currency in a browser & Node.js.
-
-## Getting started
+The most comprehensive, yet simple and consistent library for manipulating JavaScript money and currency in a browser & Node.js.
 
 ```js
 import { Mint } from '@bloombug/money';
 
-const { Money } = new Mint();
-const money = Money();
-//=> Money {fractional: 0, currency: 'USD'}
+const { Currency, Money } = new Mint();
+
+const wallet = Money();
+//=> Money { fractional: 0, currency: 'USD' }
+
+const payment = Money(100);
+//=> Money { fractional: 100, currency: 'USD' }
+
+wallet.add(payment);
+//=> Money { fractional: 100, currency: 'USD' }
 ```
 
-## Classes
+## Installation
 
-### Currency
-
-```js
-import { Mint } from '@bloombug/money';
-
-const { Currency } = new Mint();
-const currency = Currency('USD');
-//=> 'USD'
+```shell
+npm install @bloombug/money --save
 ```
 
-### Money
-
-```js
-import { Mint } from '@bloombug/money';
-
-const { Money } = new Mint();
-const money = Money(100, 'USD');
-//=> Money {fractional: 100, currency: 'USD'}
-
-money.add(Money(100, 'USD'));
-//=> Money {fractional: 200, currency: 'USD'}
-
-money.subtract(Money(100, 'USD'));
-//=> Money {fractional: 100, currency: 'USD'}
-
-money.toString();
-//=> $1.00
-
-money.format('fr-FR', { currencyDisplay: 'narrowSymbol' });
-//=> 100,00 $
-
-money.equals(Money(400, 'USD'));
-//=> false
-
-money.equals(Money(100, 'USD'));
-//=> true
+```shell
+yarn add @bloombug/money
 ```
 
-### Exchange
+## Docs
 
-```js
-import { Mint, Exchange } from '@bloombug/money';
-import { CAD, USD } from '@bloombug/money/currencies';
-import currencies from '@bloombug/money/iso-currencies.json';
+See [bloombug.io/money](https://bloombug.io/money) for more details, API, and other docs.
 
-const { Currency, Money, exchange } = new Mint({
-  currencies,
-  exchange: new Exchange(),
-});
+## Examples
 
-exchange.addRate(USD, CAD, 0.745);
-
-const money = new Money(100, USD);
-//=> Money {fractional: 100, currency: USD}
-
-exchange.exchangeWith(money, CAD);
-//=> Money {fractional: 74, currency: CAD}
-```
-
-## Why another money library?
-
-**@bloombug/money** makes money and currency feel like primitive types. As developers, we use money and currency all the time and yet they are poorly supported types and have difficult interfaces to work with. Money types range from integers to floats to strings without any standardization. **@bloombug/money** makes it easy to operate on these values and exchange between currencies.
+[View examples](./examples)

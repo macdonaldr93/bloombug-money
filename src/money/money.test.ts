@@ -113,7 +113,7 @@ describe('Money', () => {
     });
   });
 
-  describe('sub()', () => {
+  describe('subtract()', () => {
     it('returns expected fractional', () => {
       const money = new Money(mint, 400, CAD);
       const other = new Money(mint, 100, CAD);
@@ -132,7 +132,7 @@ describe('Money', () => {
 
       money.subtract(other);
 
-      expect(money).toEqualMoney(new Money(mint2, 526, CAD));
+      expect(money).toEqualMoney(new Money(mint2, 274, CAD));
     });
 
     it('throws when exchange is not found', () => {
@@ -193,7 +193,7 @@ describe('Money', () => {
     });
   });
 
-  describe('eq()', () => {
+  describe('equals()', () => {
     it('returns true when money is same fractional and currency', () => {
       const money1 = new Money(mint, 400, CAD);
       const money2 = new Money(mint, 400, CAD);
@@ -223,6 +223,14 @@ describe('Money', () => {
     });
   });
 
+  describe('toNumber()', () => {
+    it('returns expected number', () => {
+      const money = new Money(mint, 400, CAD);
+
+      expect(money.toNumber()).toEqual(400);
+    });
+  });
+
   describe('toLocaleString()', () => {
     it('returns expected format', () => {
       const money = new Money(mint, 400, CAD);
@@ -246,6 +254,13 @@ describe('Money', () => {
       const money = new Money(mint, 400, USD);
 
       expect(money.toString()).toEqual('$4.00');
+    });
+
+    it('returns expected value with different default locale', () => {
+      const mint2 = new Mint({ defaultLocale: 'fr-FR' });
+      const money = new Money(mint2, 400, USD);
+
+      expect(money.toString()).toEqual('4,00 $US');
     });
   });
 });

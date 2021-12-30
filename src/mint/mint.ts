@@ -11,6 +11,7 @@ import Money from '../money';
 
 export interface MintConstructor {
   defaultCurrency?: CurrencyCode | string;
+  defaultLocale?: string;
   currencies?: Record<CurrencyCode | string, ICurrency>;
   currencyCache?: CurrencyCache;
   exchange?: Exchange;
@@ -20,12 +21,14 @@ export default class Mint {
   readonly currencies: Record<CurrencyCode | string, ICurrency>;
   readonly currencyCache: CurrencyCache;
   readonly defaultCurrency: Currency;
+  readonly defaultLocale: string;
   exchange?: Exchange;
 
   constructor({
     currencies = defaultCurrencies,
     currencyCache = new CurrencyCache(),
     defaultCurrency = USD,
+    defaultLocale = 'en-US',
     exchange,
   }: MintConstructor = {}) {
     if (!currencies[defaultCurrency]) {
@@ -34,8 +37,12 @@ export default class Mint {
 
     this.currencies = currencies;
     this.currencyCache = currencyCache;
-
+    this.defaultLocale = defaultLocale;
     this.defaultCurrency = new Currency(this, defaultCurrency);
+
+    this.useExchange = this.useExchange.bind(this);
+    this.Currency = this.Currency.bind(this);
+    this.Money = this.Money.bind(this);
 
     if (exchange) {
       this.useExchange(exchange);

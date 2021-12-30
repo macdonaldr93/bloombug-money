@@ -1,0 +1,11 @@
+{
+  "name": "@bloombug/money-examples",
+  "author": "Ryan Macdonald",
+  "private": true,
+  "scripts": {
+    "start": "node main.js"
+  },
+  "dependencies": {
+    "@bloombug/money": "latest"
+  }
+}

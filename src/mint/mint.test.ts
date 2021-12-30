@@ -8,15 +8,22 @@ import Mint from './mint';
 describe('Mint', () => {
   it('returns expected default currency', () => {
     const mint = new Mint({ defaultCurrency: CAD, currencies });
+    const { Currency } = mint;
 
-    expect(mint.defaultCurrency).toEqualCurrency(mint.Currency(CAD));
+    expect(mint.defaultCurrency).toEqualCurrency(Currency(CAD));
   });
 
   it('returns expected default currency for money', () => {
-    const mint = new Mint({ defaultCurrency: CAD, currencies });
-    const money = mint.Money();
+    const { Currency, Money } = new Mint({ defaultCurrency: CAD, currencies });
+    const money = Money();
 
-    expect(money.currency).toEqualCurrency(mint.Currency(CAD));
+    expect(money.currency).toEqualCurrency(Currency(CAD));
+  });
+
+  it('returns expected default locale', () => {
+    const mint = new Mint({ defaultLocale: 'fr-FR' });
+
+    expect(mint.defaultLocale).toEqual('fr-FR');
   });
 
   it('returns expected currencies', () => {
