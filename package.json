@@ -33,9 +33,6 @@
   },
   "name": "@bloombug/money",
   "author": "Ryan Macdonald",
-  "publishConfig": {
-    "access": "restricted"
-  },
   "module": "dist/money.esm.js",
   "size-limit": [
     {
