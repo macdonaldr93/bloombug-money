@@ -15,11 +15,24 @@ export const createIntlNumberFormatter = memoize(
     currency: string,
     options: Intl.NumberFormatOptions = {}
   ) => {
-    return new Intl.NumberFormat(locales, {
-      ...options,
-      style: 'currency',
-      currency,
-    });
+    const mergedOptions = { ...options, style: 'currency', currency };
+
+    if (options.currencyDisplay === 'narrowSymbol') {
+      try {
+        return new Intl.NumberFormat(locales, mergedOptions);
+      } catch (err) {
+        if (err instanceof RangeError) {
+          return new Intl.NumberFormat(locales, {
+            ...mergedOptions,
+            currencyDisplay: 'symbol',
+          });
+        }
+
+        throw err;
+      }
+    }
+
+    return new Intl.NumberFormat(locales, mergedOptions);
   },
   keyResolver
 );
