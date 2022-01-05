@@ -141,6 +141,175 @@ import currencies from '@bloombug/money/iso-currencies.json';
 const { Currency } = new Mint({ currencies });
 ```
 
+## React
+
+React hooks and components are available using [@bloombug/react-money](https://github.com/macdonaldr93/bloombug-react-money).
+
+### Installation
+
+```shell
+npm install @bloombug/react-money --save
+```
+
+```shell
+yarn add @bloombug/react-money
+```
+
+### Getting started
+
+To start, you must wrap your app or part of your app in your `<MintProvider />`.
+
+```jsx
+import { Mint } from '@bloombug/money';
+import currencies from '@bloombug/money/iso-currencies.json';
+import { MintProvider } from '@bloombug/react-money';
+
+const mint = new Mint({ currencies });
+
+const App = () => {
+  return (
+    <MintProvider mint={mint}>
+      <p>Inside this provider, you can use the hooks and components.</p>
+      {/* The rest of your app */}
+    </MintProvider>
+  );
+};
+```
+
+### Components
+
+#### MoneyText
+
+This provides a simple formatted text version of your money.
+
+```jsx
+import { MoneyText } from '@bloombug/react-money';
+
+<MoneyText fractional={100} currency="CAD" />
+<MoneyText fractional={100} currency="CAD" currencyDisplay="narrowSymbol" />
+```
+
+### Hooks
+
+#### useMint()
+
+This returns the mint from the provider's context.
+
+```jsx
+import { useMint } from '@bloombug/react-money';
+
+const Component = () => {
+  const { mint } = useMint();
+
+  return <p>Component</p>;
+};
+```
+
+#### useExchange()
+
+This returns the exchange from the provider's context.
+
+```jsx
+import { useExchange } from '@bloombug/react-money';
+
+const Component = () => {
+  const { exchange } = useExchange();
+
+  return <p>Component</p>;
+};
+```
+
+#### useCurrency()
+
+This returns the currency from the provider's mint.
+
+```jsx
+import { useCurrency } from '@bloombug/react-money';
+
+const Component = () => {
+  const { Currency } = useCurrency();
+
+  return <p>{Currency('CAD').name}</p>;
+};
+```
+
+#### useMoney()
+
+This returns the money from the provider's mint.
+
+```jsx
+import { useMoney } from '@bloombug/react-money';
+
+const Component = () => {
+  const { Money, formatMoney } = useMoney();
+
+  return (
+    <div>
+      <p>{Money(100).toLocaleString()}</p>
+      <p>{formatMoney('en-US', 100, 'CAD')}</p>
+    </div>
+  );
+};
+```
+
+## Testing
+
+Custom matchers are available using [@bloombug/jest-money](https://github.com/macdonaldr93/bloombug-jest-money).
+
+### Installation
+
+```shell
+npm install @bloombug/jest-money --save
+```
+
+```shell
+yarn add @bloombug/jest-money
+```
+
+Import `@bloombug/jest-money` once (for instance in your [tests setup file](https://jestjs.io/docs/en/configuration.html#setupfilesafterenv-array)) and you're good to go:
+
+```js
+// In your own jest-setup.js (or any other name)
+import '@bloombug/jest-money';
+
+// In jest.config.js add (if you haven't already)
+setupFilesAfterEnv: ['<rootDir>/jest-setup.js'];
+```
+
+### TypeScript
+
+If you're using TypeScript, make sure your setup file is a .ts and not a .js to include the necessary types.
+
+You will also need to include your setup file in your tsconfig.json if you haven't already:
+
+```
+// In tsconfig.json
+"include": [
+  ...
+  "./jest-setup.ts"
+],
+```
+
+### Custom matchers
+
+#### toEqualCurrency
+
+This allows you to check whether a currency is equal to another.
+
+```js
+expect(Currency(USD)).toEqualCurrency(Currency(USD));
+expect(Currency(USD)).not.toEqualCurrency(Currency(CAD));
+```
+
+#### toEqualMoney
+
+This allows you to check whether a money is equal to another.
+
+```js
+expect(Money(100, USD)).toEqualCurrency(Money(100, USD));
+expect(Money(100, USD)).not.toEqualCurrency(Money(100, CAD));
+```
+
 ## Examples
 
 [View examples on GitHub](https://github.com/macdonaldr93/bloombug-money/tree/main/examples)
