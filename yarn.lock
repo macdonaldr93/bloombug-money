@@ -928,6 +928,11 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@bloombug/jest-money@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@bloombug/jest-money/-/jest-money-1.3.0.tgz#70d60fd11f8d701b9e894d732321e9cbb654ff0b"
+  integrity sha512-T16k+RVCmAG1UpEI/i8P5ZUnOubMC2qwfYIKPu51yTBAMn1nQLZyLvLjzhDYwrCrmoB2Z3Pk+NK7QGfdqHCQXw==
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.4.tgz#f864ae85004d0fcab6f50be9141c4da368d1656a"
