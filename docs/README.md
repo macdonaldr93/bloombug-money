@@ -185,8 +185,19 @@ This provides a simple formatted text version of your money.
 ```jsx
 import { MoneyText } from '@bloombug/react-money';
 
-<MoneyText fractional={100} currency="CAD" />
-<MoneyText fractional={100} currency="CAD" currencyDisplay="narrowSymbol" />
+const Component = () => {
+  return (
+    <p>
+      <MoneyText fractional={100} currency="USD" />
+      <MoneyText
+        fractional={100}
+        currency="CAD"
+        currencyDisplay="narrowSymbol"
+        locale="en-CA"
+      />
+    </p>
+  );
+};
 ```
 
 ### Hooks
