@@ -2,9 +2,10 @@
 
 > 💸 Modern JavaScript library for money and currency 💸
 
+- High precision JS numbers
 - Written in TypeScript
 - Multi-currency support
 - i18n built-in (no locale files)
-- High precision JS numbers
+- React components and hooks
 
 [Get Started](#bloombugmoney)
