@@ -155,6 +155,27 @@ npm install @bloombug/react-money --save
 yarn add @bloombug/react-money
 ```
 
+### React Native
+
+If you're using React Native, you'll need to polyfill `BigInt`.
+
+```shell
+npm install big-integer --save
+```
+
+```shell
+yarn add big-integer
+```
+
+```js
+// Somewhere at the top of your entry file. For example, ./App.tsx.
+import BigInt from 'big-integer';
+
+if (typeof global.BigInt === 'undefined') {
+  global.BigInt = BigInt;
+}
+```
+
 ### Getting started
 
 To start, you must wrap your app or part of your app in your `<MintProvider />`.
