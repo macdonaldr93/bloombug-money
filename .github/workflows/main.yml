@@ -20,7 +20,7 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Setup Intl
-        run: npm install -g full-icu
+        uses: sarisia/setup-icu@v1
 
       - name: Install deps and build (with cache)
         uses: bahmutov/npm-install@v1
