@@ -7,6 +7,8 @@ import { createIntlNumberFormatter } from '../utilities/formatter';
 import { isValueFinite } from '../utilities/number';
 
 export default class Money {
+  static readonly ZERO = Big(0);
+
   readonly currency: Currency;
   readonly mint: Mint;
   readonly fractional: BigDecimal;
@@ -14,7 +16,7 @@ export default class Money {
 
   constructor(
     mint: Mint,
-    fractional: BigDecimal | bigint | number | string = 0,
+    fractional: BigDecimal | bigint | number | string = Money.ZERO,
     currency?: CurrencyCode | null
   ) {
     this.mint = mint;
@@ -69,6 +71,24 @@ export default class Money {
     return (
       this.fractional.equals(other.fractional) &&
       this.currency.equals(other.currency)
+    );
+  }
+
+  isZero() {
+    return this.fractional.compareTo(Money.ZERO) === 0;
+  }
+
+  compareTo(other: Money) {
+    if (this.currency.equals(other.currency)) {
+      return this.fractional.compareTo(other.fractional);
+    }
+
+    if (!this.mint.exchange) {
+      throw new Error('You must instantiate an exchange for currency exchange');
+    }
+
+    return this.fractional.compareTo(
+      this.mint.exchange.exchangeWith(other, this.currency.isoCode).fractional
     );
   }
 

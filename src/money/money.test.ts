@@ -391,6 +391,49 @@ describe('Money', () => {
     });
   });
 
+  describe('isZero()', () => {
+    it('returns true when money is zero', () => {
+      const money = new Money(mint, 0);
+
+      expect(money.isZero()).toBeTruthy();
+    });
+
+    it('returns false when money is bigger than zero', () => {
+      const money = new Money(mint, 5);
+
+      expect(money.isZero()).toBeFalsy();
+    });
+
+    it('returns false when money is smaller than zero', () => {
+      const money = new Money(mint, -5);
+
+      expect(money.isZero()).toBeFalsy();
+    });
+  });
+
+  describe('compareTo()', () => {
+    it('returns 0 when other money is same', () => {
+      const money = new Money(mint, 0);
+      const other = new Money(mint, 0);
+
+      expect(money.compareTo(other)).toEqual(0);
+    });
+
+    it('returns -1 when other money is bigger', () => {
+      const money = new Money(mint, 0);
+      const other = new Money(mint, 5);
+
+      expect(money.compareTo(other)).toEqual(-1);
+    });
+
+    it('returns 1 when other money is smaller', () => {
+      const money = new Money(mint, 5);
+      const other = new Money(mint, 0);
+
+      expect(money.compareTo(other)).toEqual(1);
+    });
+  });
+
   describe('toNumber()', () => {
     it('returns expected number', () => {
       const money = new Money(mint, 400, CAD);
