@@ -8,6 +8,7 @@ export default class Money {
   readonly currency: Currency;
   readonly mint: Mint;
   fractional: BigDecimal;
+  private cachedSubunitToUnit: BigDecimal;
 
   constructor(
     mint: Mint,
@@ -34,10 +35,16 @@ export default class Money {
     this.fractional = Big(resolvedFractional);
   }
 
+  get subunitToUnit() {
+    if (!this.cachedSubunitToUnit) {
+      this.cachedSubunitToUnit = Big(this.currency.subunitToUnit);
+    }
+
+    return this.cachedSubunitToUnit;
+  }
+
   get amount() {
-    return this.fractional
-      .divide(Big(this.currency.subunitToUnit))
-      .numberValue();
+    return this.fractional.divide(this.subunitToUnit).numberValue();
   }
 
   get cents() {
