@@ -34,21 +34,26 @@ export default class Money {
       throw RangeError('fractional must be finite');
     }
 
-    this.fractional = Big(resolvedFractional);
+    this.fractional = Big(resolvedFractional, undefined, this.mint.mathContext);
   }
 
   get subunitToUnit() {
     if (!this.cachedSubunitToUnit) {
-      this.cachedSubunitToUnit = Big(this.currency.subunitToUnit);
+      this.cachedSubunitToUnit = Big(
+        this.currency.subunitToUnit,
+        undefined,
+        this.mint.mathContext
+      );
     }
 
     return this.cachedSubunitToUnit;
   }
 
   get amount() {
-    return this.fractional
-      .divide(this.subunitToUnit, undefined, this.mint.defaultRoundingMode)
-      .numberValue();
+    return (
+      this.fractional.round(this.mint.mathContext).numberValue() /
+      this.subunitToUnit.round(this.mint.mathContext).numberValue()
+    );
   }
 
   get cents() {
@@ -160,7 +165,7 @@ export default class Money {
   divide(money: Money | number | BigDecimal) {
     if (!isMoney(money)) {
       this.fractional = this.fractional.divide(
-        Big(money),
+        Big(money, undefined, this.mint.mathContext),
         undefined,
         this.mint.defaultRoundingMode
       );
@@ -189,7 +194,9 @@ export default class Money {
 
   multiply(money: Money | number | BigDecimal) {
     if (!isMoney(money)) {
-      this.fractional = this.fractional.multiply(Big(money));
+      this.fractional = this.fractional.multiply(
+        Big(money, undefined, this.mint.mathContext)
+      );
 
       return this;
     }

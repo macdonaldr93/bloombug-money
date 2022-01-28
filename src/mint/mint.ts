@@ -16,6 +16,7 @@ export interface MintConstructor {
   currencyCache?: CurrencyCache;
   defaultCurrency?: CurrencyCode | string;
   defaultLocale?: string;
+  defaultPrecision?: number;
   defaultRoundingMode?: RoundingMode;
   exchange?: Exchange;
 }
@@ -25,6 +26,7 @@ export default class Mint {
   readonly currencyCache: CurrencyCache;
   readonly defaultCurrency: Currency;
   readonly defaultLocale: string;
+  readonly defaultPrecision: number;
   readonly defaultRoundingMode: RoundingMode;
   readonly mathContext: MathContext;
   exchange?: Exchange;
@@ -34,6 +36,7 @@ export default class Mint {
     currencyCache = new CurrencyCache(),
     defaultCurrency = USD,
     defaultLocale = 'en-US',
+    defaultPrecision = 16,
     defaultRoundingMode = RoundingMode.HALF_UP,
     exchange,
   }: MintConstructor = {}) {
@@ -45,7 +48,12 @@ export default class Mint {
     this.currencyCache = currencyCache;
     this.defaultLocale = defaultLocale;
     this.defaultCurrency = new Currency(this, defaultCurrency);
+    this.defaultPrecision = defaultPrecision;
     this.defaultRoundingMode = defaultRoundingMode;
+    this.mathContext = new MathContext(
+      this.defaultPrecision,
+      this.defaultRoundingMode
+    );
 
     this.useExchange = this.useExchange.bind(this);
     this.Currency = this.Currency.bind(this);
