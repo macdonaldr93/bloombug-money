@@ -46,7 +46,9 @@ export default class Money {
   }
 
   get amount() {
-    return this.fractional.divide(this.subunitToUnit).numberValue();
+    return this.fractional
+      .divide(this.subunitToUnit, undefined, this.mint.defaultRoundingMode)
+      .numberValue();
   }
 
   get cents() {
@@ -157,13 +159,21 @@ export default class Money {
 
   divide(money: Money | number | BigDecimal) {
     if (!isMoney(money)) {
-      this.fractional = this.fractional.divide(Big(money));
+      this.fractional = this.fractional.divide(
+        Big(money),
+        undefined,
+        this.mint.defaultRoundingMode
+      );
 
       return this;
     }
 
     if (this.currency.equals(money.currency)) {
-      this.fractional = this.fractional.divide(money.fractional);
+      this.fractional = this.fractional.divide(
+        money.fractional,
+        undefined,
+        this.mint.defaultRoundingMode
+      );
 
       return this;
     }

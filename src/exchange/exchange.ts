@@ -69,7 +69,13 @@ export default class Exchange {
 
   private calculateFractional(money: Money, to: Currency) {
     return money.fractional.divide(
-      Big(money.currency.subunitToUnit).divide(Big(to.subunitToUnit))
+      Big(money.currency.subunitToUnit).divide(
+        Big(to.subunitToUnit),
+        undefined,
+        this.mint?.defaultRoundingMode
+      ),
+      undefined,
+      this.mint?.defaultRoundingMode
     );
   }
 }

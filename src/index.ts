@@ -1,3 +1,4 @@
+export { RoundingMode } from 'bigdecimal.js';
 export * from './currencies';
 export {
   default as Currency,

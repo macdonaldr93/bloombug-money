@@ -165,6 +165,15 @@ describe('Money', () => {
       expect(money).toEqualMoney(new Money(mint, 200, CAD));
     });
 
+    it('returns expected fractional with rounding', () => {
+      const money = new Money(mint, 234523, CAD);
+      const other = new Money(mint, 21234, CAD);
+
+      money.divide(other);
+
+      expect(money).toEqualMoney(new Money(mint, 11, CAD));
+    });
+
     it('returns expected fractional for number', () => {
       const money = new Money(mint, 400, CAD);
 
