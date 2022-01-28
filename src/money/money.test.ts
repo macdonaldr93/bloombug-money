@@ -84,9 +84,7 @@ describe('Money', () => {
       const money = new Money(mint, 400, CAD);
       const other = new Money(mint, 400, CAD);
 
-      money.add(other);
-
-      expect(money).toEqualMoney(new Money(mint, 800, CAD));
+      expect(money.add(other)).toEqualMoney(new Money(mint, 800, CAD));
     });
 
     it('returns expected fractional with exchange', () => {
@@ -96,9 +94,7 @@ describe('Money', () => {
       const money = new Money(mint2, 400, CAD);
       const other = new Money(mint2, 400, USD);
 
-      money.add(other);
-
-      expect(money).toEqualMoney(new Money(mint, 904, CAD));
+      expect(money.add(other)).toEqualMoney(new Money(mint, 904, CAD));
     });
 
     it('throws when exchange is not found', () => {
@@ -126,9 +122,7 @@ describe('Money', () => {
       const money = new Money(mint, 400, CAD);
       const other = new Money(mint, 100, CAD);
 
-      money.subtract(other);
-
-      expect(money).toEqualMoney(new Money(mint, 300, CAD));
+      expect(money.subtract(other)).toEqualMoney(new Money(mint, 300, CAD));
     });
 
     it('returns expected fractional with exchange', () => {
@@ -138,9 +132,7 @@ describe('Money', () => {
       const money = new Money(mint2, 400, CAD);
       const other = new Money(mint2, 100, USD);
 
-      money.subtract(other);
-
-      expect(money).toEqualMoney(new Money(mint2, 274, CAD));
+      expect(money.subtract(other)).toEqualMoney(new Money(mint2, 274, CAD));
     });
 
     it('throws when exchange is not found', () => {
@@ -168,34 +160,26 @@ describe('Money', () => {
       const money = new Money(mint, 400, CAD);
       const other = new Money(mint, 2, CAD);
 
-      money.divide(other);
-
-      expect(money).toEqualMoney(new Money(mint, 200, CAD));
+      expect(money.divide(other)).toEqualMoney(new Money(mint, 200, CAD));
     });
 
     it('returns expected fractional with rounding', () => {
       const money = new Money(mint, 234523, CAD);
       const other = new Money(mint, 21234, CAD);
 
-      money.divide(other);
-
-      expect(money).toEqualMoney(new Money(mint, 11, CAD));
+      expect(money.divide(other)).toEqualMoney(new Money(mint, 11, CAD));
     });
 
     it('returns expected fractional for number', () => {
       const money = new Money(mint, 400, CAD);
 
-      money.divide(2);
-
-      expect(money).toEqualMoney(new Money(mint, 200, CAD));
+      expect(money.divide(2)).toEqualMoney(new Money(mint, 200, CAD));
     });
 
     it('returns expected fractional for BigDecimal', () => {
       const money = new Money(mint, 400, CAD);
 
-      money.divide(Big(2));
-
-      expect(money).toEqualMoney(new Money(mint, 200, CAD));
+      expect(money.divide(Big(2))).toEqualMoney(new Money(mint, 200, CAD));
     });
 
     it('returns expected fractional with exchange', () => {
@@ -205,9 +189,7 @@ describe('Money', () => {
       const money = new Money(mint2, 400, CAD);
       const other = new Money(mint2, 4, USD);
 
-      money.divide(other);
-
-      expect(money).toEqualMoney(new Money(mint2, 80, CAD));
+      expect(money.divide(other)).toEqualMoney(new Money(mint2, 80, CAD));
     });
 
     it('throws when exchange is not found', () => {
@@ -235,25 +217,19 @@ describe('Money', () => {
       const money = new Money(mint, 400, CAD);
       const other = new Money(mint, 2, CAD);
 
-      money.multiply(other);
-
-      expect(money).toEqualMoney(new Money(mint, 800, CAD));
+      expect(money.multiply(other)).toEqualMoney(new Money(mint, 800, CAD));
     });
 
     it('returns expected fractional for number', () => {
       const money = new Money(mint, 400, CAD);
 
-      money.multiply(2);
-
-      expect(money).toEqualMoney(new Money(mint, 800, CAD));
+      expect(money.multiply(2)).toEqualMoney(new Money(mint, 800, CAD));
     });
 
     it('returns expected fractional for BigDecimal', () => {
       const money = new Money(mint, 400, CAD);
 
-      money.multiply(Big(2));
-
-      expect(money).toEqualMoney(new Money(mint, 800, CAD));
+      expect(money.multiply(Big(2))).toEqualMoney(new Money(mint, 800, CAD));
     });
 
     it('returns expected fractional with exchange', () => {
@@ -263,9 +239,7 @@ describe('Money', () => {
       const money = new Money(mint2, 400, CAD);
       const other = new Money(mint2, 4, USD);
 
-      money.multiply(other);
-
-      expect(money).toEqualMoney(new Money(mint2, 2000, CAD));
+      expect(money.multiply(other)).toEqualMoney(new Money(mint2, 2000, CAD));
     });
 
     it('throws when exchange is not found', () => {
@@ -292,17 +266,13 @@ describe('Money', () => {
     it('returns positive amount as negative', () => {
       const money = new Money(mint, 400, CAD);
 
-      money.negate();
-
-      expect(money).toEqualMoney(new Money(mint, -400, CAD));
+      expect(money.negate()).toEqualMoney(new Money(mint, -400, CAD));
     });
 
     it('returns negative amount as positive', () => {
       const money = new Money(mint, -400, CAD);
 
-      money.negate();
-
-      expect(money).toEqualMoney(new Money(mint, 400, CAD));
+      expect(money.negate()).toEqualMoney(new Money(mint, 400, CAD));
     });
   });
 
@@ -360,9 +330,8 @@ describe('Money', () => {
 
     it('returns expected format with decimals', () => {
       const money = new Money(mint, 100000);
-      money.divide(23);
 
-      expect(money.format()).toEqual('$43.48');
+      expect(money.divide(23).format()).toEqual('$43.48');
     });
 
     it('returns formatter with default locale', () => {

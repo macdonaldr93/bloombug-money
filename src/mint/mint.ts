@@ -1,4 +1,4 @@
-import { MathContext, RoundingMode } from 'bigdecimal.js';
+import { BigDecimal, MathContext, RoundingMode } from 'bigdecimal.js';
 
 import defaultCurrencies from '../default-currencies.json';
 import Currency, {
@@ -75,7 +75,10 @@ export default class Mint {
     return new Currency(this, isoCode);
   }
 
-  Money(fractional?: bigint | number | string, currency?: CurrencyCode | null) {
+  Money(
+    fractional?: BigDecimal | bigint | number | string,
+    currency?: CurrencyCode | null
+  ) {
     return new Money(this, fractional, currency);
   }
 }

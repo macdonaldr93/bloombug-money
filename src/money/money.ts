@@ -9,12 +9,12 @@ import { isValueFinite } from '../utilities/number';
 export default class Money {
   readonly currency: Currency;
   readonly mint: Mint;
-  fractional: BigDecimal;
+  readonly fractional: BigDecimal;
   private cachedSubunitToUnit: BigDecimal;
 
   constructor(
     mint: Mint,
-    fractional: bigint | number | string = 0,
+    fractional: BigDecimal | bigint | number | string = 0,
     currency?: CurrencyCode | null
   ) {
     this.mint = mint;
@@ -65,25 +65,109 @@ export default class Money {
     return this.amount;
   }
 
-  format(locales: string | string[]): string;
-  format(options?: CurrencyFormatOptions): string;
-  format(locales: string | string[], options?: CurrencyFormatOptions): string;
-  format(
-    localesOrOptions?: string | string[] | CurrencyFormatOptions,
-    options?: CurrencyFormatOptions
-  ) {
-    if (
-      typeof localesOrOptions === 'undefined' &&
-      typeof options === 'undefined'
-    ) {
-      return this.formatter().format(this.amount);
+  equals(other: Money) {
+    return (
+      this.fractional.equals(other.fractional) &&
+      this.currency.equals(other.currency)
+    );
+  }
+
+  add(money: Money): Money {
+    if (this.currency.equals(money.currency)) {
+      return this.mint.Money(
+        this.fractional.add(money.fractional),
+        this.currency.isoCode
+      );
     }
 
-    if (isLocales(localesOrOptions)) {
-      return this.formatter(localesOrOptions, options).format(this.amount);
+    if (!this.mint.exchange) {
+      throw new Error('You must instantiate an exchange for currency exchange');
     }
 
-    return this.formatter(localesOrOptions).format(this.amount);
+    return this.add(
+      this.mint.exchange.exchangeWith(money, this.currency.isoCode)
+    );
+  }
+
+  subtract(money: Money): Money {
+    if (this.currency.equals(money.currency)) {
+      return this.mint.Money(
+        this.fractional.subtract(money.fractional),
+        this.currency.isoCode
+      );
+    }
+
+    if (!this.mint.exchange) {
+      throw new Error('You must instantiate an exchange for currency exchange');
+    }
+
+    return this.subtract(
+      this.mint.exchange.exchangeWith(money, this.currency.isoCode)
+    );
+  }
+
+  divide(money: Money | number | BigDecimal): Money {
+    if (!isMoney(money)) {
+      return this.mint.Money(
+        this.fractional.divide(
+          Big(money, undefined, this.mint.mathContext),
+          undefined,
+          this.mint.defaultRoundingMode
+        ),
+        this.currency.isoCode
+      );
+    }
+
+    if (this.currency.equals(money.currency)) {
+      return this.mint.Money(
+        this.fractional.divide(
+          money.fractional,
+          undefined,
+          this.mint.defaultRoundingMode
+        ),
+        this.currency.isoCode
+      );
+    }
+
+    if (!this.mint.exchange) {
+      throw new Error('You must instantiate an exchange for currency exchange');
+    }
+
+    return this.divide(
+      this.mint.exchange.exchangeWith(money, this.currency.isoCode)
+    );
+  }
+
+  multiply(money: Money | number | BigDecimal): Money {
+    if (!isMoney(money)) {
+      return this.mint.Money(
+        this.fractional.multiply(Big(money, undefined, this.mint.mathContext)),
+        this.currency.isoCode
+      );
+    }
+
+    if (this.currency.equals(money.currency)) {
+      return this.mint.Money(
+        this.fractional.multiply(money.fractional),
+        this.currency.isoCode
+      );
+    }
+
+    if (!this.mint.exchange) {
+      throw new Error('You must instantiate an exchange for currency exchange');
+    }
+
+    return this.multiply(
+      this.mint.exchange.exchangeWith(money, this.currency.isoCode)
+    );
+  }
+
+  negate() {
+    return this.mint.Money(this.fractional.negate(), this.currency.isoCode);
+  }
+
+  clone() {
+    return new Money(this.mint, this.cents, this.currency.isoCode);
   }
 
   formatter(locales: string | string[]): Intl.NumberFormat;
@@ -121,107 +205,25 @@ export default class Money {
     );
   }
 
-  equals(other: Money) {
-    return (
-      this.fractional.equals(other.fractional) &&
-      this.currency.equals(other.currency)
-    );
-  }
-
-  add(money: Money) {
-    if (this.currency.equals(money.currency)) {
-      this.fractional = this.fractional.add(money.fractional);
-
-      return this;
+  format(locales: string | string[]): string;
+  format(options?: CurrencyFormatOptions): string;
+  format(locales: string | string[], options?: CurrencyFormatOptions): string;
+  format(
+    localesOrOptions?: string | string[] | CurrencyFormatOptions,
+    options?: CurrencyFormatOptions
+  ) {
+    if (
+      typeof localesOrOptions === 'undefined' &&
+      typeof options === 'undefined'
+    ) {
+      return this.formatter().format(this.amount);
     }
 
-    if (!this.mint.exchange) {
-      throw new Error('You must instantiate an exchange for currency exchange');
+    if (isLocales(localesOrOptions)) {
+      return this.formatter(localesOrOptions, options).format(this.amount);
     }
 
-    this.add(this.mint.exchange.exchangeWith(money, this.currency.isoCode));
-
-    return this;
-  }
-
-  subtract(money: Money) {
-    if (this.currency.equals(money.currency)) {
-      this.fractional = this.fractional.subtract(money.fractional);
-
-      return this;
-    }
-
-    if (!this.mint.exchange) {
-      throw new Error('You must instantiate an exchange for currency exchange');
-    }
-
-    this.subtract(
-      this.mint.exchange.exchangeWith(money, this.currency.isoCode)
-    );
-
-    return this;
-  }
-
-  divide(money: Money | number | BigDecimal) {
-    if (!isMoney(money)) {
-      this.fractional = this.fractional.divide(
-        Big(money, undefined, this.mint.mathContext),
-        undefined,
-        this.mint.defaultRoundingMode
-      );
-
-      return this;
-    }
-
-    if (this.currency.equals(money.currency)) {
-      this.fractional = this.fractional.divide(
-        money.fractional,
-        undefined,
-        this.mint.defaultRoundingMode
-      );
-
-      return this;
-    }
-
-    if (!this.mint.exchange) {
-      throw new Error('You must instantiate an exchange for currency exchange');
-    }
-
-    this.divide(this.mint.exchange.exchangeWith(money, this.currency.isoCode));
-
-    return this;
-  }
-
-  multiply(money: Money | number | BigDecimal) {
-    if (!isMoney(money)) {
-      this.fractional = this.fractional.multiply(
-        Big(money, undefined, this.mint.mathContext)
-      );
-
-      return this;
-    }
-
-    if (this.currency.equals(money.currency)) {
-      this.fractional = this.fractional.multiply(money.fractional);
-
-      return this;
-    }
-
-    if (!this.mint.exchange) {
-      throw new Error('You must instantiate an exchange for currency exchange');
-    }
-
-    this.multiply(
-      this.mint.exchange.exchangeWith(money, this.currency.isoCode)
-    );
-
-    return this;
-  }
-
-  negate() {
-    this.fractional = this.fractional.negate();
-
-    return this;
+    return this.formatter(localesOrOptions).format(this.amount);
   }
 
   toNumber() {
