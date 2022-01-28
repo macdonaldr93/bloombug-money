@@ -358,6 +358,13 @@ describe('Money', () => {
       expect(formattedMoney).toEqual('CA$4.11');
     });
 
+    it('returns expected format with decimals', () => {
+      const money = new Money(mint, 100000);
+      money.divide(23);
+
+      expect(money.format()).toEqual('$43.48');
+    });
+
     it('returns formatter with default locale', () => {
       const mint = new Mint({ currencies, defaultLocale: 'fr-CA' });
       const money = new Money(mint, 400, CAD);
