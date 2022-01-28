@@ -21,17 +21,21 @@ jobs:
 
       - name: Setup Intl
         uses: sarisia/setup-icu@v1
-
-      - name: Export ICU
-        uses: sarisia/action-uses-icu-function@v2
+        id: setup-icu
+        with:
+          noexport: true
 
       - name: Install deps and build (with cache)
         uses: bahmutov/npm-install@v1
 
       - name: Lint
+        env:
+          NODE_ICU_DATA: ${{ steps.setup-icu.outputs.icu-data-dir }}
         run: yarn lint
 
       - name: Test
+        env:
+          NODE_ICU_DATA: ${{ steps.setup-icu.outputs.icu-data-dir }}
         run: yarn test --ci --coverage --maxWorkers=2
 
       - name: Build
