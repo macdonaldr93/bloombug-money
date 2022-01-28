@@ -50,7 +50,10 @@ export default class Mint {
     this.defaultCurrency = new Currency(this, defaultCurrency);
     this.defaultPrecision = defaultPrecision;
     this.defaultRoundingMode = defaultRoundingMode;
-    this.mathContext = new MathContext(16, this.defaultRoundingMode);
+    this.mathContext = new MathContext(
+      this.defaultPrecision,
+      this.defaultRoundingMode
+    );
 
     this.useExchange = this.useExchange.bind(this);
     this.Currency = this.Currency.bind(this);
