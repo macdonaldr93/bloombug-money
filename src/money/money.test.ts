@@ -7,7 +7,7 @@ import Money from './money';
 import { Exchange } from '..';
 
 describe('Money', () => {
-  const mint = new Mint({ currencies });
+  const mint = new Mint({ currencies, defaultLocale: 'en-US' });
 
   describe('#currency', () => {
     it('returns expected currency from string', () => {
@@ -297,12 +297,36 @@ describe('Money', () => {
       expect(formatter).toBeInstanceOf(Intl.NumberFormat);
     });
 
+    it('returns formatter with default locale', () => {
+      const mint = new Mint({ currencies, defaultLocale: 'fr-CA' });
+      const money = new Money(mint, 400, CAD);
+      const formatter = money.formatter();
+
+      expect(formatter.resolvedOptions()).toEqual(
+        expect.objectContaining({
+          locale: 'fr-CA',
+        })
+      );
+    });
+
     it('returns formatter with options', () => {
+      const money = new Money(mint, 400, CAD);
+      const formatter = money.formatter({ currencyDisplay: 'symbol' });
+
+      expect(formatter.resolvedOptions()).toEqual(
+        expect.objectContaining({
+          currencyDisplay: 'symbol',
+        })
+      );
+    });
+
+    it('returns formatter with locales and options', () => {
       const money = new Money(mint, 400, CAD);
       const formatter = money.formatter('en-US', { currencyDisplay: 'symbol' });
 
       expect(formatter.resolvedOptions()).toEqual(
         expect.objectContaining({
+          locale: 'en-US',
           currencyDisplay: 'symbol',
         })
       );
@@ -317,7 +341,24 @@ describe('Money', () => {
       expect(formattedMoney).toEqual('CA$4.00');
     });
 
+    it('returns formatter with default locale', () => {
+      const mint = new Mint({ currencies, defaultLocale: 'fr-CA' });
+      const money = new Money(mint, 400, CAD);
+      const formattedMoney = money.format();
+
+      expect(formattedMoney).toEqual('4,00 $ CA');
+    });
+
     it('returns formatter with options', () => {
+      const money = new Money(mint, 400, CAD);
+      const formattedMoney = money.format({
+        currencyDisplay: 'narrowSymbol',
+      });
+
+      expect(formattedMoney).toEqual('$4.00');
+    });
+
+    it('returns formatter with locales and options', () => {
       const money = new Money(mint, 400, CAD);
       const formattedMoney = money.format('en-US', {
         currencyDisplay: 'narrowSymbol',
@@ -373,7 +414,23 @@ describe('Money', () => {
       expect(formattedMoney).toEqual('CA$4.00');
     });
 
+    it('returns formatter with default locale', () => {
+      const money = new Money(mint, 400, CAD);
+      const formattedMoney = money.toLocaleString();
+
+      expect(formattedMoney).toEqual('CA$4.00');
+    });
+
     it('returns formatter with options', () => {
+      const money = new Money(mint, 400, CAD);
+      const formattedMoney = money.toLocaleString({
+        currencyDisplay: 'narrowSymbol',
+      });
+
+      expect(formattedMoney).toEqual('$4.00');
+    });
+
+    it('returns formatter with locales and options', () => {
       const money = new Money(mint, 400, CAD);
       const formattedMoney = money.toLocaleString('en-US', {
         currencyDisplay: 'narrowSymbol',

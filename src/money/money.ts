@@ -1,6 +1,7 @@
 import { Big, BigDecimal } from 'bigdecimal.js';
 import Currency, { CurrencyCode } from '../currency';
 import Mint from '../mint';
+import { CurrencyFormatOptions } from '../types';
 import isMoney from '../utilities/isMoney';
 import { createIntlNumberFormatter } from '../utilities/formatter';
 import { isValueFinite } from '../utilities/number';
@@ -57,18 +58,60 @@ export default class Money {
     return this.amount;
   }
 
+  format(locales: string | string[]): string;
+  format(options?: CurrencyFormatOptions): string;
+  format(locales: string | string[], options?: CurrencyFormatOptions): string;
   format(
-    locales: string | string[] = this.mint.defaultLocale,
-    options: Omit<Intl.NumberFormatOptions, 'style' | 'currency'> = {}
+    localesOrOptions?: string | string[] | CurrencyFormatOptions,
+    options?: CurrencyFormatOptions
   ) {
-    return this.formatter(locales, options).format(this.amount);
+    if (
+      typeof localesOrOptions === 'undefined' &&
+      typeof options === 'undefined'
+    ) {
+      return this.formatter().format(this.amount);
+    }
+
+    if (isLocales(localesOrOptions)) {
+      return this.formatter(localesOrOptions, options).format(this.amount);
+    }
+
+    return this.formatter(localesOrOptions).format(this.amount);
   }
 
+  formatter(locales: string | string[]): Intl.NumberFormat;
+  formatter(options?: CurrencyFormatOptions): Intl.NumberFormat;
   formatter(
-    locales: string | string[] = this.mint.defaultLocale,
-    options: Omit<Intl.NumberFormatOptions, 'style' | 'currency'> = {}
+    locales: string | string[],
+    options?: CurrencyFormatOptions
+  ): Intl.NumberFormat;
+  formatter(
+    localesOrOptions?: string | string[] | CurrencyFormatOptions,
+    options?: CurrencyFormatOptions
   ) {
-    return createIntlNumberFormatter(locales, this.currency.isoCode, options);
+    if (
+      typeof localesOrOptions === 'undefined' &&
+      typeof options === 'undefined'
+    ) {
+      return createIntlNumberFormatter(
+        this.mint.defaultLocale,
+        this.currency.isoCode
+      );
+    }
+
+    if (isLocales(localesOrOptions)) {
+      return createIntlNumberFormatter(
+        localesOrOptions,
+        this.currency.isoCode,
+        options
+      );
+    }
+
+    return createIntlNumberFormatter(
+      this.mint.defaultLocale,
+      this.currency.isoCode,
+      localesOrOptions
+    );
   }
 
   equals(other: Money) {
@@ -168,14 +211,37 @@ export default class Money {
     return this.fractional.numberValue();
   }
 
+  toLocaleString(locales: string | string[]): string;
+  toLocaleString(options?: CurrencyFormatOptions): string;
   toLocaleString(
-    locales?: string | string[],
-    options: Omit<Intl.NumberFormatOptions, 'style' | 'currency'> = {}
+    locales: string | string[],
+    options?: CurrencyFormatOptions
+  ): string;
+  toLocaleString(
+    localesOrOptions?: string | string[] | CurrencyFormatOptions,
+    options?: CurrencyFormatOptions
   ) {
-    return this.format(locales, options);
+    if (
+      typeof localesOrOptions === 'undefined' &&
+      typeof options === 'undefined'
+    ) {
+      return this.format();
+    }
+
+    if (isLocales(localesOrOptions)) {
+      return this.format(localesOrOptions, options);
+    }
+
+    return this.format(localesOrOptions);
   }
 
   toString() {
     return this.format(this.mint.defaultLocale);
   }
+}
+
+function isLocales(
+  locales: string | string[] | undefined | CurrencyFormatOptions
+): locales is string | string[] {
+  return typeof locales === 'string' || Array.isArray(locales);
 }
