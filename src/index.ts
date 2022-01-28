@@ -16,3 +16,4 @@ export {
 } from './exchange';
 export { default as Mint, MintConstructor } from './mint';
 export { default as Money } from './money';
+export { default as isMoney } from './utilities/isMoney';

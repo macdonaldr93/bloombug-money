@@ -1,6 +1,7 @@
 import { Big, BigDecimal } from 'bigdecimal.js';
 import Currency, { CurrencyCode } from '../currency';
 import Mint from '../mint';
+import isMoney from '../utilities/isMoney';
 import { createIntlNumberFormatter } from '../utilities/formatter';
 import { isValueFinite } from '../utilities/number';
 
@@ -105,9 +106,7 @@ export default class Money {
   }
 
   divide(money: Money | number | BigDecimal) {
-    const isMoney = money instanceof Money;
-
-    if (!isMoney) {
+    if (!isMoney(money)) {
       this.fractional = this.fractional.divide(Big(money));
 
       return this;
@@ -129,9 +128,7 @@ export default class Money {
   }
 
   multiply(money: Money | number | BigDecimal) {
-    const isMoney = money instanceof Money;
-
-    if (!isMoney) {
+    if (!isMoney(money)) {
       this.fractional = this.fractional.multiply(Big(money));
 
       return this;
