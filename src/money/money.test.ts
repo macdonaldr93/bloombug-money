@@ -155,6 +155,140 @@ describe('Money', () => {
     });
   });
 
+  describe('divide()', () => {
+    it('returns expected fractional', () => {
+      const money = new Money(mint, 400, CAD);
+      const other = new Money(mint, 2, CAD);
+
+      money.divide(other);
+
+      expect(money).toEqualMoney(new Money(mint, 200, CAD));
+    });
+
+    it('returns expected fractional for number', () => {
+      const money = new Money(mint, 400, CAD);
+
+      money.divide(2);
+
+      expect(money).toEqualMoney(new Money(mint, 200, CAD));
+    });
+
+    it('returns expected fractional for BigDecimal', () => {
+      const money = new Money(mint, 400, CAD);
+
+      money.divide(Big(2));
+
+      expect(money).toEqualMoney(new Money(mint, 200, CAD));
+    });
+
+    it('returns expected fractional with exchange', () => {
+      const mint2 = new Mint({ currencies, exchange: new Exchange() });
+      mint2.exchange?.addRate(USD, CAD, 1.26);
+
+      const money = new Money(mint2, 400, CAD);
+      const other = new Money(mint2, 4, USD);
+
+      money.divide(other);
+
+      expect(money).toEqualMoney(new Money(mint2, 80, CAD));
+    });
+
+    it('throws when exchange is not found', () => {
+      const money = new Money(mint, 400, CAD);
+      const other = new Money(mint, 2, USD);
+
+      expect(() => money.divide(other)).toThrow(
+        'You must instantiate an exchange for currency exchange'
+      );
+    });
+
+    it('throws when exchange rate is not found', () => {
+      const mint2 = new Mint({ currencies, exchange: new Exchange() });
+      const money = new Money(mint2, 400, CAD);
+      const other = new Money(mint2, 2, USD);
+
+      expect(() => money.divide(other)).toThrow(
+        "No conversion rate known for 'USD' -> 'CAD'"
+      );
+    });
+  });
+
+  describe('multiply()', () => {
+    it('returns expected fractional', () => {
+      const money = new Money(mint, 400, CAD);
+      const other = new Money(mint, 2, CAD);
+
+      money.multiply(other);
+
+      expect(money).toEqualMoney(new Money(mint, 800, CAD));
+    });
+
+    it('returns expected fractional for number', () => {
+      const money = new Money(mint, 400, CAD);
+
+      money.multiply(2);
+
+      expect(money).toEqualMoney(new Money(mint, 800, CAD));
+    });
+
+    it('returns expected fractional for BigDecimal', () => {
+      const money = new Money(mint, 400, CAD);
+
+      money.multiply(Big(2));
+
+      expect(money).toEqualMoney(new Money(mint, 800, CAD));
+    });
+
+    it('returns expected fractional with exchange', () => {
+      const mint2 = new Mint({ currencies, exchange: new Exchange() });
+      mint2.exchange?.addRate(USD, CAD, 1.26);
+
+      const money = new Money(mint2, 400, CAD);
+      const other = new Money(mint2, 4, USD);
+
+      money.multiply(other);
+
+      expect(money).toEqualMoney(new Money(mint2, 2000, CAD));
+    });
+
+    it('throws when exchange is not found', () => {
+      const money = new Money(mint, 400, CAD);
+      const other = new Money(mint, 2, USD);
+
+      expect(() => money.multiply(other)).toThrow(
+        'You must instantiate an exchange for currency exchange'
+      );
+    });
+
+    it('throws when exchange rate is not found', () => {
+      const mint2 = new Mint({ currencies, exchange: new Exchange() });
+      const money = new Money(mint2, 400, CAD);
+      const other = new Money(mint2, 2, USD);
+
+      expect(() => money.multiply(other)).toThrow(
+        "No conversion rate known for 'USD' -> 'CAD'"
+      );
+    });
+  });
+
+  describe('negate()', () => {
+    it('returns positive amount as negative', () => {
+      const money = new Money(mint, 400, CAD);
+
+      money.negate();
+
+      expect(money).toEqualMoney(new Money(mint, -400, CAD));
+    });
+
+    it('returns negative amount as positive', () => {
+      const money = new Money(mint, -400, CAD);
+
+      money.negate();
+
+      expect(money).toEqualMoney(new Money(mint, 400, CAD));
+    });
+  });
+
   describe('formatter()', () => {
     it('returns formatter', () => {
       const money = new Money(mint, 400, CAD);

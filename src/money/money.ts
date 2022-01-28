@@ -104,6 +104,62 @@ export default class Money {
     return this;
   }
 
+  divide(money: Money | number | BigDecimal) {
+    const isMoney = money instanceof Money;
+
+    if (!isMoney) {
+      this.fractional = this.fractional.divide(Big(money));
+
+      return this;
+    }
+
+    if (this.currency.equals(money.currency)) {
+      this.fractional = this.fractional.divide(money.fractional);
+
+      return this;
+    }
+
+    if (!this.mint.exchange) {
+      throw new Error('You must instantiate an exchange for currency exchange');
+    }
+
+    this.divide(this.mint.exchange.exchangeWith(money, this.currency.isoCode));
+
+    return this;
+  }
+
+  multiply(money: Money | number | BigDecimal) {
+    const isMoney = money instanceof Money;
+
+    if (!isMoney) {
+      this.fractional = this.fractional.multiply(Big(money));
+
+      return this;
+    }
+
+    if (this.currency.equals(money.currency)) {
+      this.fractional = this.fractional.multiply(money.fractional);
+
+      return this;
+    }
+
+    if (!this.mint.exchange) {
+      throw new Error('You must instantiate an exchange for currency exchange');
+    }
+
+    this.multiply(
+      this.mint.exchange.exchangeWith(money, this.currency.isoCode)
+    );
+
+    return this;
+  }
+
+  negate() {
+    this.fractional = this.fractional.negate();
+
+    return this;
+  }
+
   toNumber() {
     return this.fractional.numberValue();
   }
