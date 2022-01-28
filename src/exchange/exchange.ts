@@ -38,8 +38,8 @@ export default class Exchange {
   }
 
   exchange(fractional: BigDecimal, rate: number) {
-    return Big(fractional)
-      .multiply(Big(rate))
+    return Big(fractional, undefined, this.mint?.mathContext)
+      .multiply(Big(rate, undefined, this.mint?.mathContext))
       .toBigInt()
       .valueOf();
   }
@@ -69,8 +69,12 @@ export default class Exchange {
 
   private calculateFractional(money: Money, to: Currency) {
     return money.fractional.divide(
-      Big(money.currency.subunitToUnit).divide(
-        Big(to.subunitToUnit),
+      Big(
+        money.currency.subunitToUnit,
+        undefined,
+        this.mint?.mathContext
+      ).divide(
+        Big(to.subunitToUnit, undefined, this.mint?.mathContext),
         undefined,
         this.mint?.defaultRoundingMode
       ),
