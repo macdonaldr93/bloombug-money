@@ -1,12 +1,10 @@
 import { Big, BigDecimal } from 'bigdecimal.js';
 import Currency, { CurrencyCode } from '../currency';
 import Mint from '../mint';
-import { CurrencyFormatOptions } from '../types';
+import { CurrencyFormatOptions, FractionalInputType } from '../types';
 import isMoney from '../utilities/isMoney';
 import { createIntlNumberFormatter } from '../utilities/formatter';
 import { isValueFinite } from '../utilities/number';
-
-type FractionalInputType = BigDecimal | bigint | number | string;
 
 export default class Money {
   static readonly ZERO = Big(0);
