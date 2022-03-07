@@ -6,6 +6,8 @@ import isMoney from '../utilities/isMoney';
 import { createIntlNumberFormatter } from '../utilities/formatter';
 import { isValueFinite } from '../utilities/number';
 
+type FractionalInputType = BigDecimal | bigint | number | string;
+
 export default class Money {
   static readonly ZERO = Big(0);
 
@@ -16,7 +18,7 @@ export default class Money {
 
   constructor(
     mint: Mint,
-    fractional: BigDecimal | bigint | number | string = Money.ZERO,
+    fractional: FractionalInputType = Money.ZERO,
     currency?: CurrencyCode | null
   ) {
     this.mint = mint;
@@ -78,7 +80,29 @@ export default class Money {
     return this.fractional.compareTo(Money.ZERO) === 0;
   }
 
-  compareTo(other: Money) {
+  gt(other: Money | FractionalInputType) {
+    return this.compareTo(other) === 1;
+  }
+
+  gte(other: Money | FractionalInputType) {
+    const comparison = this.compareTo(other);
+    return comparison === 1 || comparison === 0;
+  }
+
+  lt(other: Money | FractionalInputType) {
+    return this.compareTo(other) === -1;
+  }
+
+  lte(other: Money | FractionalInputType) {
+    const comparison = this.compareTo(other);
+    return comparison === -1 || comparison === 0;
+  }
+
+  compareTo(other: Money | FractionalInputType) {
+    if (!isMoney(other)) {
+      other = this.mint.Money(other, this.currency.isoCode);
+    }
+
     if (this.currency.equals(other.currency)) {
       return this.fractional.compareTo(other.fractional);
     }
@@ -92,7 +116,11 @@ export default class Money {
     );
   }
 
-  add(money: Money): Money {
+  add(money: Money | FractionalInputType): Money {
+    if (!isMoney(money)) {
+      money = this.mint.Money(money, this.currency.isoCode);
+    }
+
     if (this.currency.equals(money.currency)) {
       return this.mint.Money(
         this.fractional.add(money.fractional),
@@ -109,7 +137,11 @@ export default class Money {
     );
   }
 
-  subtract(money: Money): Money {
+  subtract(money: Money | FractionalInputType): Money {
+    if (!isMoney(money)) {
+      money = this.mint.Money(money, this.currency.isoCode);
+    }
+
     if (this.currency.equals(money.currency)) {
       return this.mint.Money(
         this.fractional.subtract(money.fractional),
@@ -126,7 +158,7 @@ export default class Money {
     );
   }
 
-  divide(money: Money | number | BigDecimal): Money {
+  divide(money: Money | FractionalInputType): Money {
     if (!isMoney(money)) {
       return this.mint.Money(
         this.fractional.divide(
@@ -158,7 +190,7 @@ export default class Money {
     );
   }
 
-  multiply(money: Money | number | BigDecimal): Money {
+  multiply(money: Money | FractionalInputType): Money {
     if (!isMoney(money)) {
       return this.mint.Money(
         this.fractional.multiply(Big(money, undefined, this.mint.mathContext)),

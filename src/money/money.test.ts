@@ -87,6 +87,12 @@ describe('Money', () => {
       expect(money.add(other)).toEqualMoney(new Money(mint, 800, CAD));
     });
 
+    it('returns expected fractional for number', () => {
+      const money = new Money(mint, 400, CAD);
+
+      expect(money.add(400)).toEqualMoney(new Money(mint, 800, CAD));
+    });
+
     it('returns expected fractional with exchange', () => {
       const mint2 = new Mint({ currencies, exchange: new Exchange() });
       mint2.exchange?.addRate(USD, CAD, 1.26);
@@ -123,6 +129,12 @@ describe('Money', () => {
       const other = new Money(mint, 100, CAD);
 
       expect(money.subtract(other)).toEqualMoney(new Money(mint, 300, CAD));
+    });
+
+    it('returns expected fractional for number', () => {
+      const money = new Money(mint, 400, CAD);
+
+      expect(money.subtract(100)).toEqualMoney(new Money(mint, 300, CAD));
     });
 
     it('returns expected fractional with exchange', () => {
@@ -411,12 +423,110 @@ describe('Money', () => {
     });
   });
 
+  describe('gt()', () => {
+    it('returns false when other money is same', () => {
+      const money = new Money(mint, 0);
+      const other = new Money(mint, 0);
+
+      expect(money.gt(other)).toBeFalsy();
+    });
+
+    it('returns false when other money is bigger', () => {
+      const money = new Money(mint, 0);
+      const other = new Money(mint, 5);
+
+      expect(money.gt(other)).toBeFalsy();
+    });
+
+    it('returns true when other money is smaller', () => {
+      const money = new Money(mint, 5);
+      const other = new Money(mint, 0);
+
+      expect(money.gt(other)).toBeTruthy();
+    });
+  });
+
+  describe('gte()', () => {
+    it('returns true when other money is same', () => {
+      const money = new Money(mint, 0);
+      const other = new Money(mint, 0);
+
+      expect(money.gte(other)).toBeTruthy();
+    });
+
+    it('returns false when other money is bigger', () => {
+      const money = new Money(mint, 0);
+      const other = new Money(mint, 5);
+
+      expect(money.gte(other)).toBeFalsy();
+    });
+
+    it('returns true when other money is smaller', () => {
+      const money = new Money(mint, 5);
+      const other = new Money(mint, 0);
+
+      expect(money.gte(other)).toBeTruthy();
+    });
+  });
+
+  describe('lt()', () => {
+    it('returns false when other money is same', () => {
+      const money = new Money(mint, 0);
+      const other = new Money(mint, 0);
+
+      expect(money.lt(other)).toBeFalsy();
+    });
+
+    it('returns true when other money is bigger', () => {
+      const money = new Money(mint, 0);
+      const other = new Money(mint, 5);
+
+      expect(money.lt(other)).toBeTruthy();
+    });
+
+    it('returns false when other money is smaller', () => {
+      const money = new Money(mint, 5);
+      const other = new Money(mint, 0);
+
+      expect(money.lt(other)).toBeFalsy();
+    });
+  });
+
+  describe('lte()', () => {
+    it('returns true when other money is same', () => {
+      const money = new Money(mint, 0);
+      const other = new Money(mint, 0);
+
+      expect(money.lte(other)).toBeTruthy();
+    });
+
+    it('returns true when other money is bigger', () => {
+      const money = new Money(mint, 0);
+      const other = new Money(mint, 5);
+
+      expect(money.lte(other)).toBeTruthy();
+    });
+
+    it('returns false when other money is smaller', () => {
+      const money = new Money(mint, 5);
+      const other = new Money(mint, 0);
+
+      expect(money.lte(other)).toBeFalsy();
+    });
+  });
+
   describe('compareTo()', () => {
     it('returns 0 when other money is same', () => {
       const money = new Money(mint, 0);
       const other = new Money(mint, 0);
 
       expect(money.compareTo(other)).toEqual(0);
+    });
+
+    it('returns 0 when other money is same for number', () => {
+      const money = new Money(mint, 0);
+
+      expect(money.compareTo(0)).toEqual(0);
     });
 
     it('returns -1 when other money is bigger', () => {
@@ -426,11 +536,23 @@ describe('Money', () => {
       expect(money.compareTo(other)).toEqual(-1);
     });
 
+    it('returns -1 when other money is bigger for number', () => {
+      const money = new Money(mint, 0);
+
+      expect(money.compareTo(5)).toEqual(-1);
+    });
+
     it('returns 1 when other money is smaller', () => {
       const money = new Money(mint, 5);
       const other = new Money(mint, 0);
 
       expect(money.compareTo(other)).toEqual(1);
+    });
+
+    it('returns 1 when other money is smaller for number', () => {
+      const money = new Money(mint, 5);
+
+      expect(money.compareTo(0)).toEqual(1);
     });
   });
 
