@@ -1,4 +1,4 @@
-import { BigDecimal, MathContext, RoundingMode } from 'bigdecimal.js';
+import { MathContext, RoundingMode } from 'bigdecimal.js';
 
 import defaultCurrencies from '../default-currencies.json';
 import Currency, {
@@ -10,6 +10,7 @@ import Currency, {
 import { USD } from '../currencies';
 import Exchange from '../exchange';
 import Money from '../money';
+import { FractionalInputType } from '../types';
 
 export interface MintConstructor {
   currencies?: Record<CurrencyCode | string, ICurrency>;
@@ -75,10 +76,7 @@ export default class Mint {
     return new Currency(this, isoCode);
   }
 
-  Money(
-    fractional?: BigDecimal | bigint | number | string,
-    currency?: CurrencyCode | null
-  ) {
+  Money(fractional?: FractionalInputType, currency?: CurrencyCode | null) {
     return new Money(this, fractional, currency);
   }
 }
