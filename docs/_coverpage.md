@@ -1,4 +1,4 @@
-# @bloombug/money <small>1.3.1</small>
+# @bloombug/money <small>1.6.0</small>
 
 > 💸 Modern JavaScript library for money and currency 💸
 

@@ -98,7 +98,7 @@ import { Mint, CAD } from '@bloombug/money';
 import currencies from '@bloombug/money/iso-currencies.json';
 
 const { Money } = new Mint({ currencies, defaultCurrency: CAD });
-const money = Money('1,000.00');
+const money = Money('1,000.00', { asAmount: true });
 
 money.format('en-US');
 //=> CA$1,000.00
