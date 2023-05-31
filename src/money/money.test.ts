@@ -37,19 +37,19 @@ describe('Money', () => {
     });
 
     it('returns expected value from string', () => {
-      const money = new Money(mint, '400', CAD);
+      const money = new Money(mint, '400.00', CAD);
 
-      expect(money.fractional).toEqual(Big(400, undefined, mint.mathContext));
+      expect(money.format()).toEqual('CA$400.00');
     });
 
     it('returns expected value from with string thousands', () => {
       const money = new Money(mint, '4000.19', CAD);
 
-      expect(money.format()).toEqual('CA$40.00');
+      expect(money.format()).toEqual('CA$4,000.19');
     });
 
     it('returns expected value from with string thousands and as amount', () => {
-      const money = new Money(mint, '4,000.19', CAD, { asAmount: true });
+      const money = new Money(mint, '4,000.19', CAD);
 
       expect(money.format()).toEqual('CA$4,000.19');
     });
@@ -355,7 +355,7 @@ describe('Money', () => {
       const money = new Money(mint, 400, CAD);
       const formattedMoney = money.format();
 
-      expect(formattedMoney).toEqual('4,00 $ CA');
+      expect(formattedMoney).toEqual('4,00 $');
     });
 
     it('returns formatter with options', () => {

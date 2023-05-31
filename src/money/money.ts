@@ -6,10 +6,6 @@ import isMoney from '../utilities/isMoney';
 import { createIntlNumberFormatter } from '../utilities/formatter';
 import { isValueFinite } from '../utilities/number';
 
-interface MoneyOptions {
-  asAmount?: boolean;
-}
-
 export default class Money {
   static readonly ZERO = Big(0);
 
@@ -21,27 +17,22 @@ export default class Money {
   constructor(
     mint: Mint,
     fractional: FractionalInputType = Money.ZERO,
-    currencyOrOptions?: CurrencyCode | null | MoneyOptions,
-    options: MoneyOptions = {}
+    currency?: CurrencyCode | null
   ) {
     this.mint = mint;
     this.currency =
-      typeof currencyOrOptions === 'string'
-        ? this.mint.Currency(currencyOrOptions)
+      typeof currency === 'string'
+        ? this.mint.Currency(currency)
         : this.mint.defaultCurrency;
 
     let resolvedFractional = fractional;
 
     if (typeof fractional === 'string') {
-      if (options.asAmount) {
-        resolvedFractional = Big(
-          fractional.replace(this.currency.thousandsSeparator, ''),
-          undefined,
-          this.mint.mathContext
-        ).multiply(this.subunitToUnit, this.mint.mathContext);
-      } else {
-        resolvedFractional = Big(fractional, undefined, this.mint.mathContext);
-      }
+      resolvedFractional = Big(
+        fractional.replace(this.currency.thousandsSeparator, ''),
+        undefined,
+        this.mint.mathContext
+      ).multiply(this.subunitToUnit, this.mint.mathContext);
     }
 
     if (!isValueFinite(Number(resolvedFractional))) {
