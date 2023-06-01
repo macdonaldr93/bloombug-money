@@ -1,14 +1,22 @@
 import currencies from '../test/iso-currencies.json';
 import { CAD, USD } from '../currencies';
-import Currency from './currency';
+import { Currency } from '..';
 import { UnknownCurrencyError } from './errors';
 import Mint from '../mint';
 
 describe('Currency', () => {
   const mint = new Mint({ currencies });
 
+  beforeAll(() => {
+    Mint.setDefault(mint);
+  });
+
+  afterAll(() => {
+    Mint.resetDefault();
+  });
+
   it('initializes with currency data', () => {
-    const currency = new Currency(mint, CAD);
+    const currency = new Currency(CAD);
 
     expect(currency.priority).toEqual(5);
     expect(currency.isoCode).toEqual(CAD);
@@ -27,7 +35,7 @@ describe('Currency', () => {
   });
 
   it('throws unknown currency error when iso code is not found', () => {
-    expect(() => new Currency(mint, 'foo' as any)).toThrow(
+    expect(() => new Currency('foo' as any)).toThrow(
       new UnknownCurrencyError('foo')
     );
   });
@@ -35,38 +43,38 @@ describe('Currency', () => {
   it('throws when the currency store is empty', () => {
     const emptyMint = new Mint();
 
-    expect(() => new Currency(emptyMint, CAD)).toThrowError();
+    expect(() => new Currency(CAD, emptyMint)).toThrowError();
   });
 
   it('#separator returns decimalMark mark', () => {
-    const currency = new Currency(mint, CAD);
+    const currency = new Currency(CAD);
 
     expect(currency.separator).toEqual(currency.decimalMark);
   });
 
   it('#delimiter returns thousands separator', () => {
-    const currency = new Currency(mint, CAD);
+    const currency = new Currency(CAD);
 
     expect(currency.delimiter).toEqual(currency.thousandsSeparator);
   });
 
   it('#code returns iso code', () => {
-    const currency = new Currency(mint, CAD);
+    const currency = new Currency(CAD);
 
     expect(currency.code).toEqual(currency.isoCode);
   });
 
   describe('equals()', () => {
     it('returns true when iso codes are the same', () => {
-      const currency1 = new Currency(mint, CAD);
-      const currency2 = new Currency(mint, CAD);
+      const currency1 = new Currency(CAD);
+      const currency2 = new Currency(CAD);
 
       expect(currency1.equals(currency2)).toBeTruthy();
     });
 
     it('returns false when iso codes are different', () => {
-      const currency1 = new Currency(mint, CAD);
-      const currency2 = new Currency(mint, USD);
+      const currency1 = new Currency(CAD);
+      const currency2 = new Currency(USD);
 
       expect(currency1.equals(currency2)).toBeFalsy();
     });
@@ -74,7 +82,7 @@ describe('Currency', () => {
 
   describe('toLocaleString()', () => {
     it('returns name', () => {
-      const currency = new Currency(mint, CAD);
+      const currency = new Currency(CAD);
 
       expect(currency.toLocaleString()).toEqual('Canadian Dollar');
     });
@@ -99,7 +107,7 @@ describe('Currency', () => {
           },
         },
       });
-      const currency = new Currency(mint, USD);
+      const currency = new Currency(USD, mint);
 
       expect(currency.toLocaleString()).toEqual('USD');
     });
@@ -107,7 +115,7 @@ describe('Currency', () => {
 
   describe('toString()', () => {
     it('returns iso code', () => {
-      const currency = new Currency(mint, CAD);
+      const currency = new Currency(CAD);
 
       expect(currency.toString()).toEqual(CAD);
     });

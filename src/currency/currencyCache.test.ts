@@ -1,14 +1,23 @@
 import currencies from '../test/iso-currencies.json';
 import { CAD, USD } from '../currencies';
-import Currency from './currency';
+import { Currency } from '..';
 import Mint from '../mint';
 import { CurrencyCache } from '.';
 
 describe('CurrencyCache', () => {
+  const mint = new Mint({ currencies });
+
+  beforeAll(() => {
+    Mint.setDefault(mint);
+  });
+
+  afterAll(() => {
+    Mint.resetDefault();
+  });
+
   it('codes() returns currency iso codes', () => {
     const currencyCache = new CurrencyCache();
-    const mint = new Mint({ currencies });
-    const currency = new Currency(mint, CAD);
+    const currency = new Currency(CAD);
 
     currencyCache.set(currency);
 
@@ -19,8 +28,7 @@ describe('CurrencyCache', () => {
 
   it('currencies() returns currencies', () => {
     const currencyCache = new CurrencyCache();
-    const mint = new Mint({ currencies });
-    const cad = new Currency(mint, CAD);
+    const cad = new Currency(CAD);
 
     currencyCache.set(cad);
 
@@ -32,9 +40,8 @@ describe('CurrencyCache', () => {
   it('forEach() iterates over empty cache', () => {
     const stub = jest.fn();
     const currencyCache = new CurrencyCache();
-    const mint = new Mint({ currencies });
-    const cad = new Currency(mint, CAD);
-    const usd = new Currency(mint, USD);
+    const cad = new Currency(CAD);
+    const usd = new Currency(USD);
 
     currencyCache.set(cad);
     currencyCache.set(usd);
@@ -54,8 +61,7 @@ describe('CurrencyCache', () => {
 
   it('has() returns true if currency is cached', () => {
     const currencyCache = new CurrencyCache();
-    const mint = new Mint({ currencies });
-    const currency = new Currency(mint, CAD);
+    const currency = new Currency(CAD);
 
     currencyCache.set(currency);
 
@@ -64,16 +70,14 @@ describe('CurrencyCache', () => {
 
   it('has() returns false if currency is not cached', () => {
     const currencyCache = new CurrencyCache();
-    const mint = new Mint({ currencies });
-    const currency = new Currency(mint, CAD);
+    const currency = new Currency(CAD);
 
     expect(currencyCache.has(currency.isoCode)).toBeFalsy();
   });
 
   it('get() returns currency', () => {
     const currencyCache = new CurrencyCache();
-    const mint = new Mint({ currencies });
-    const cad = new Currency(mint, CAD);
+    const cad = new Currency(CAD);
 
     currencyCache.set(cad);
 
@@ -82,16 +86,14 @@ describe('CurrencyCache', () => {
 
   it('get() returns undefined', () => {
     const currencyCache = new CurrencyCache();
-    const mint = new Mint({ currencies });
-    const cad = new Currency(mint, CAD);
+    const cad = new Currency(CAD);
 
     expect(currencyCache.get(cad.isoCode)).toBeUndefined();
   });
 
   it('set() stores currency', () => {
     const currencyCache = new CurrencyCache();
-    const mint = new Mint({ currencies });
-    const currency = new Currency(mint, CAD);
+    const currency = new Currency(CAD);
 
     currencyCache.set(currency);
 
@@ -100,8 +102,7 @@ describe('CurrencyCache', () => {
 
   it('delete() removes currency', () => {
     const currencyCache = new CurrencyCache();
-    const mint = new Mint({ currencies });
-    const currency = new Currency(mint, CAD);
+    const currency = new Currency(CAD);
 
     currencyCache.set(currency);
 
@@ -114,8 +115,7 @@ describe('CurrencyCache', () => {
 
   it('clear() removes all currency', () => {
     const currencyCache = new CurrencyCache();
-    const mint = new Mint({ currencies });
-    const currency = new Currency(mint, CAD);
+    const currency = new Currency(CAD);
 
     currencyCache.set(currency);
     currencyCache.clear();
@@ -125,8 +125,7 @@ describe('CurrencyCache', () => {
 
   it('size() returns number of currencies', () => {
     const currencyCache = new CurrencyCache();
-    const mint = new Mint({ currencies });
-    const currency = new Currency(mint, CAD);
+    const currency = new Currency(CAD);
 
     currencyCache.set(currency);
 

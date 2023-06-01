@@ -23,6 +23,16 @@ export interface MintConstructor {
 }
 
 export default class Mint {
+  static defaultInstance?: Mint;
+
+  static setDefault(mint: Mint) {
+    Mint.defaultInstance = mint;
+  }
+
+  static resetDefault() {
+    Mint.defaultInstance = undefined;
+  }
+
   readonly currencies: Record<CurrencyCode | string, ICurrency>;
   readonly currencyCache: CurrencyCache;
   readonly defaultCurrency: Currency;
@@ -48,7 +58,7 @@ export default class Mint {
     this.currencies = currencies;
     this.currencyCache = currencyCache;
     this.defaultLocale = defaultLocale;
-    this.defaultCurrency = new Currency(this, defaultCurrency);
+    this.defaultCurrency = new Currency(defaultCurrency, this);
     this.defaultPrecision = defaultPrecision;
     this.defaultRoundingMode = defaultRoundingMode;
     this.mathContext = new MathContext(
@@ -73,10 +83,10 @@ export default class Mint {
   }
 
   Currency(isoCode: CurrencyCode) {
-    return new Currency(this, isoCode);
+    return new Currency(isoCode, this);
   }
 
   Money(fractional?: FractionalInputType, currency?: CurrencyCode | null) {
-    return new Money(this, fractional, currency);
+    return new Money(fractional, currency, this);
   }
 }

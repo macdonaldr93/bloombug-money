@@ -15,7 +15,7 @@ export const createIntlNumberFormatter = memoize(
     currency: string,
     options: Intl.NumberFormatOptions = {}
   ) => {
-    const mergedOptions = { ...options, style: 'currency', currency };
+    const mergedOptions = { style: 'currency', ...options, currency };
 
     if (options.currencyDisplay === 'narrowSymbol') {
       try {

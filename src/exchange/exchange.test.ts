@@ -10,7 +10,6 @@ describe('Exchange', () => {
 
   describe('useMint()', () => {
     it('sets expected mint', () => {
-      const mint = new Mint({ currencies });
       const exchange = new Exchange();
 
       exchange.useMint(mint);
@@ -19,7 +18,6 @@ describe('Exchange', () => {
     });
 
     it('sets expected exchange for mint', () => {
-      const mint = new Mint({ currencies });
       const exchange = new Exchange();
 
       exchange.useMint(mint);
@@ -34,9 +32,9 @@ describe('Exchange', () => {
 
       exchange.useMint(mint);
 
-      const money = exchange.exchangeWith(new Money(mint, 100, USD), USD);
+      const money = exchange.exchangeWith(new Money(100, USD, mint), USD);
 
-      expect(money).toEqualMoney(new Money(mint, 100, USD));
+      expect(money).toEqualMoney(new Money(100, USD, mint));
     });
 
     it('returns expected money with exchange rate', () => {
@@ -45,16 +43,16 @@ describe('Exchange', () => {
       exchange.useMint(mint);
       exchange.addRate(USD, CAD, 0.745);
 
-      const money = exchange.exchangeWith(new Money(mint, 100, USD), CAD);
+      const money = exchange.exchangeWith(new Money(100, USD, mint), CAD);
 
-      expect(money).toEqualMoney(new Money(mint, 74, CAD));
+      expect(money).toEqualMoney(new Money(74, CAD, mint));
     });
 
     it('throws if mint is undefined', () => {
       const exchange = new Exchange();
 
       expect(() =>
-        exchange.exchangeWith(new Money(mint, 100, USD), CAD)
+        exchange.exchangeWith(new Money(100, USD, mint), CAD)
       ).toThrow('You must initialize with a mint');
     });
 
@@ -64,7 +62,7 @@ describe('Exchange', () => {
       exchange.useMint(mint);
 
       expect(() =>
-        exchange.exchangeWith(new Money(mint, 100, USD), CAD)
+        exchange.exchangeWith(new Money(100, USD, mint), CAD)
       ).toThrow("No conversion rate known for 'USD' -> 'CAD'");
     });
   });

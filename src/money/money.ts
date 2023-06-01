@@ -15,10 +15,14 @@ export default class Money {
   private cachedSubunitToUnit: BigDecimal;
 
   constructor(
-    mint: Mint,
     fractional: FractionalInputType = Money.ZERO,
-    currency?: CurrencyCode | null
+    currency?: CurrencyCode | null,
+    mint: Mint | undefined = Mint.defaultInstance
   ) {
+    if (!mint) {
+      throw new Error('Pass in a mint or use Mint.setDefault()');
+    }
+
     this.mint = mint;
     this.currency =
       typeof currency === 'string'
@@ -220,7 +224,7 @@ export default class Money {
   }
 
   clone() {
-    return new Money(this.mint, this.cents, this.currency.isoCode);
+    return new Money(this.cents, this.currency.isoCode, this.mint);
   }
 
   formatter(locales: string | string[]): Intl.NumberFormat;
@@ -309,6 +313,15 @@ export default class Money {
 
   toString() {
     return this.format(this.mint.defaultLocale);
+  }
+
+  toDecimal() {
+    const decimals = this.currency.subunitToUnit.toString().length - 1;
+
+    return this.format({
+      style: 'decimal',
+      minimumFractionDigits: decimals || 0,
+    });
   }
 }
 
