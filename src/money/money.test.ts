@@ -75,6 +75,12 @@ describe('Money', () => {
 
       expect(money.cents).toEqual(400);
     });
+
+    it('#cents alias returns exepcted value', () => {
+      const money = new Money('1299.95', CAD);
+
+      expect(money.multiply(0.03).cents).toEqual(3900);
+    });
   });
 
   describe('#amount', () => {

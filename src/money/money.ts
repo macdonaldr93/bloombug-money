@@ -68,7 +68,7 @@ export default class Money {
   }
 
   get cents() {
-    return this.fractional.numberValue();
+    return Math.round(this.fractional.numberValue());
   }
 
   // Aliases
