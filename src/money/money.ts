@@ -17,10 +17,12 @@ export default class Money {
   constructor(
     fractional: FractionalInputType = Money.ZERO,
     currency?: CurrencyCode | null,
-    mint: Mint | undefined = Mint.defaultInstance
+    mint: Mint = Mint.instance
   ) {
     if (!mint) {
-      throw new Error('Pass in a mint or use Mint.setDefault()');
+      throw new TypeError(
+        'Call Mint.init() or pass in a mint before using Money'
+      );
     }
 
     this.mint = mint;

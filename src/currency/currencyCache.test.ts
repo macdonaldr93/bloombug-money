@@ -5,14 +5,12 @@ import Mint from '../mint';
 import { CurrencyCache } from '.';
 
 describe('CurrencyCache', () => {
-  const mint = new Mint({ currencies });
-
   beforeAll(() => {
-    Mint.setDefault(mint);
+    Mint.init({ currencies });
   });
 
   afterAll(() => {
-    Mint.resetDefault();
+    Mint.clear();
   });
 
   it('codes() returns currency iso codes', () => {

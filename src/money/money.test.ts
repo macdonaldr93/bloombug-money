@@ -7,14 +7,14 @@ import Money from './money';
 import { Exchange } from '..';
 
 describe('Money', () => {
-  const mint = new Mint({ currencies, defaultLocale: 'en-US' });
+  let mint: Mint;
 
   beforeAll(() => {
-    Mint.setDefault(mint);
+    mint = Mint.init({ currencies, defaultLocale: 'en-US' });
   });
 
   afterAll(() => {
-    Mint.resetDefault();
+    Mint.clear();
   });
 
   describe('#currency', () => {

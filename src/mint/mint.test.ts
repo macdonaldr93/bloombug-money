@@ -6,6 +6,18 @@ import currencies from '../test/iso-currencies.json';
 import Mint from './mint';
 
 describe('Mint', () => {
+  it('initializes the default mint', () => {
+    Mint.init();
+
+    expect(Mint.instance).toBeDefined();
+  });
+
+  it('initializes the default mint with options', () => {
+    Mint.init({ defaultLocale: 'fr-FR' });
+
+    expect(Mint.instance.defaultLocale).toEqual('fr-FR');
+  });
+
   it('returns expected default currency', () => {
     const mint = new Mint({ defaultCurrency: CAD, currencies });
     const { Currency } = mint;

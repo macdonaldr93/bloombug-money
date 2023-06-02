@@ -5,14 +5,12 @@ import { UnknownCurrencyError } from './errors';
 import Mint from '../mint';
 
 describe('Currency', () => {
-  const mint = new Mint({ currencies });
-
   beforeAll(() => {
-    Mint.setDefault(mint);
+    Mint.init({ currencies });
   });
 
   afterAll(() => {
-    Mint.resetDefault();
+    Mint.clear();
   });
 
   it('initializes with currency data', () => {

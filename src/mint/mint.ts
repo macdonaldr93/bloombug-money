@@ -1,5 +1,4 @@
 import { MathContext, RoundingMode } from 'bigdecimal.js';
-
 import defaultCurrencies from '../default-currencies.json';
 import Currency, {
   CurrencyCache,
@@ -23,14 +22,15 @@ export interface MintConstructor {
 }
 
 export default class Mint {
-  static defaultInstance?: Mint;
+  static instance: Mint;
 
-  static setDefault(mint: Mint) {
-    Mint.defaultInstance = mint;
+  static init(options?: MintConstructor): Mint {
+    Mint.instance = new Mint(options);
+    return Mint.instance;
   }
 
-  static resetDefault() {
-    Mint.defaultInstance = undefined;
+  static clear() {
+    Mint.instance = new Mint();
   }
 
   readonly currencies: Record<CurrencyCode | string, ICurrency>;

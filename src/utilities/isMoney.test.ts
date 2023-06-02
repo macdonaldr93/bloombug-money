@@ -4,14 +4,12 @@ import Money from '../money';
 import isMoney from './isMoney';
 
 describe('utilities', () => {
-  const mint = new Mint({ currencies });
-
   beforeAll(() => {
-    Mint.setDefault(mint);
+    Mint.init({ currencies });
   });
 
   afterAll(() => {
-    Mint.resetDefault();
+    Mint.clear();
   });
 
   describe('isMoney()', () => {

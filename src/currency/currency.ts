@@ -20,14 +20,13 @@ export default class Currency {
   readonly thousandsSeparator: string;
   private readonly mint: Mint;
 
-  constructor(
-    isoCode: CurrencyCode,
-    mint: Mint | undefined = Mint.defaultInstance
-  ) {
+  constructor(isoCode: CurrencyCode, mint: Mint | undefined = Mint.instance) {
     this.isoCode = isoCode;
 
     if (!mint) {
-      throw new Error('Pass in a mint or use Mint.setDefault()');
+      throw new TypeError(
+        'Call Mint.init() or pass in a mint before using Money'
+      );
     }
 
     this.mint = mint;
