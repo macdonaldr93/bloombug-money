@@ -61,13 +61,10 @@ export default class Money {
   }
 
   get amount() {
-    return parseFloat(
-      this.fractional
-        .divide(this.subunitToUnit)
-        .round(this.mint.mathContext)
-        .numberValue()
-        .toFixed(this.subunitToUnit.toString().length - 1)
-    );
+    return this.fractional
+      .divide(this.subunitToUnit)
+      .round(this.mint.mathContext)
+      .numberValue();
   }
 
   get cents() {

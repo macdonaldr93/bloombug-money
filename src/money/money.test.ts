@@ -105,13 +105,13 @@ describe('Money', () => {
     it('returns expected value for SEK', () => {
       const money = new Money('1299.95', GBP);
 
-      expect(money.multiply(0.03).amount).toEqual(39);
+      expect(money.multiply(0.03).amount).toEqual(38.9985);
     });
 
     it('returns expected value for ISK', () => {
       const money = new Money('1299.95', ISK);
 
-      expect(money.multiply(0.03).amount).toEqual(3900);
+      expect(money.multiply(0.03).amount).toEqual(3899.85);
     });
 
     it('#dollars alias returns expected value', () => {
