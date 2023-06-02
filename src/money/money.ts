@@ -323,6 +323,7 @@ export default class Money {
     return this.format({
       style: 'decimal',
       minimumFractionDigits: decimals || 0,
+      maximumFractionDigits: decimals,
     });
   }
 }
