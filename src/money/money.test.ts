@@ -1,6 +1,6 @@
 import { Big } from 'bigdecimal.js';
 import currencies from '../test/iso-currencies.json';
-import { CAD, ISK, USD } from '../currencies';
+import { CAD, EUR, GBP, ISK, USD } from '../currencies';
 import Currency from '../currency';
 import Mint from '../mint';
 import Money from './money';
@@ -70,14 +70,26 @@ describe('Money', () => {
       );
     });
 
-    it('#cents alias returns exepcted value', () => {
+    it('#cents alias returns expected value', () => {
       const money = new Money(400, CAD);
 
       expect(money.cents).toEqual(400);
     });
 
-    it('#cents alias returns exepcted value', () => {
+    it('#cents alias returns expected value', () => {
       const money = new Money('1299.95', CAD);
+
+      expect(money.multiply(0.03).cents).toEqual(3900);
+    });
+
+    it('#cents alias returns expected value for SEK', () => {
+      const money = new Money('1299.95', GBP);
+
+      expect(money.multiply(0.03).cents).toEqual(3900);
+    });
+
+    it('#cents alias returns expected value for ISK', () => {
+      const money = new Money('1299.95', ISK);
 
       expect(money.multiply(0.03).cents).toEqual(3900);
     });
@@ -90,7 +102,19 @@ describe('Money', () => {
       expect(money.amount).toEqual(4);
     });
 
-    it('#dollars alias returns exepcted value', () => {
+    it('returns expected value for SEK', () => {
+      const money = new Money('1299.95', GBP);
+
+      expect(money.multiply(0.03).amount).toEqual(39);
+    });
+
+    it('returns expected value for ISK', () => {
+      const money = new Money('1299.95', ISK);
+
+      expect(money.multiply(0.03).amount).toEqual(3900);
+    });
+
+    it('#dollars alias returns expected value', () => {
       const money = new Money(400, CAD);
 
       expect(money.dollars).toEqual(4);
@@ -651,10 +675,22 @@ describe('Money', () => {
       expect(money.toDecimal()).toEqual('4.00');
     });
 
-    it('returns expected value without subunits', () => {
+    it('returns expected value for ISK', () => {
       const money = new Money(400, ISK);
 
       expect(money.toDecimal()).toEqual('400');
+    });
+
+    it('returns expected value for EUR', () => {
+      const money = new Money(400000, EUR);
+
+      expect(money.toDecimal()).toEqual('4,000.00');
+    });
+
+    it('returns expected value for GBP', () => {
+      const money = new Money(400, GBP);
+
+      expect(money.toDecimal()).toEqual('4.00');
     });
   });
 });

@@ -61,9 +61,12 @@ export default class Money {
   }
 
   get amount() {
-    return (
-      this.fractional.round(this.mint.mathContext).numberValue() /
-      this.subunitToUnit.round(this.mint.mathContext).numberValue()
+    return parseFloat(
+      this.fractional
+        .divide(this.subunitToUnit)
+        .round(this.mint.mathContext)
+        .numberValue()
+        .toFixed(this.subunitToUnit.toString().length - 1)
     );
   }
 
@@ -323,7 +326,7 @@ export default class Money {
     return this.format({
       style: 'decimal',
       minimumFractionDigits: decimals || 0,
-      maximumFractionDigits: decimals,
+      maximumFractionDigits: decimals || 0,
     });
   }
 }
