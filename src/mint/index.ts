@@ -1,4 +1,1 @@
-import Mint from './mint';
-
-export default Mint;
-export { MintConstructor } from './mint';
+export { Mint, MintConfig } from './mint';

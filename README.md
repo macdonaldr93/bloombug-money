@@ -6,14 +6,14 @@
 A simple and consistent library for dealing with JavaScript money and currency in a browser & Node.js.
 
 ```js
-import { Mint } from '@bloombug/money';
+import { Mint, USD } from '@bloombug/money';
 
-const { Currency, Money } = new Mint();
+const { Money } = new Mint();
 
 const wallet = Money();
 //=> Money { fractional: 0, currency: 'USD' }
 
-const payment = Money(100);
+const payment = Money(100, USD);
 //=> Money { fractional: 100, currency: 'USD' }
 
 wallet.add(payment);

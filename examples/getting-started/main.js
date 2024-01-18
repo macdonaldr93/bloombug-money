@@ -1,10 +1,9 @@
-const { CAD, USD, Exchange, Mint } = require('@bloombug/money');
+const { CAD, USD, Mint } = require('@bloombug/money');
 const currencies = require('@bloombug/money/iso-currencies.json');
 
 const { Money, exchange } = new Mint({
   currencies,
   defaultCurrency: USD,
-  exchange: new Exchange(),
 });
 
 exchange.addRate(USD, CAD, 1.26);

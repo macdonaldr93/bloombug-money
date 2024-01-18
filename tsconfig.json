@@ -1,6 +1,6 @@
 {
   // see https://www.typescriptlang.org/tsconfig to better understand tsconfigs
-  "include": ["src", "src/test/setup.ts", "types"],
+  "include": ["src", "src/test-utils/setup.ts", "types"],
   "compilerOptions": {
     "target": "es5",
     "resolveJsonModule": true,

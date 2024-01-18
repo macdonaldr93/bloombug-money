@@ -1,64 +1,48 @@
 import { MathContext, RoundingMode } from 'bigdecimal.js';
-import defaultCurrencies from '../default-currencies.json';
-import Currency, {
-  CurrencyCache,
-  CurrencyCode,
-  ICurrency,
-  UnknownCurrencyError,
-} from '../currency';
 import { USD } from '../currencies';
-import Exchange from '../exchange';
-import Money from '../money';
-import { FractionalInputType } from '../types';
+import { Currency } from '../currency';
+import { UnknownCurrencyError } from '../errors';
+import { Exchange, ExchangeStore } from '../exchange';
+import { Money, MoneyOptions } from '../money';
+import { Amount } from '../types';
 
-export interface MintConstructor {
-  currencies?: Record<CurrencyCode | string, ICurrency>;
-  currencyCache?: CurrencyCache;
-  defaultCurrency?: CurrencyCode | string;
+const defaultCurrencies = {
+  USD,
+};
+
+export interface MintConfig {
+  currencies?: Record<string, Currency>;
+  defaultCurrency?: Currency;
   defaultLocale?: string;
   defaultPrecision?: number;
   defaultRoundingMode?: RoundingMode;
-  exchange?: Exchange;
+  exchange?: { store: ExchangeStore };
 }
 
-export default class Mint {
-  static instance: Mint;
-
-  static init(options?: MintConstructor): Mint {
-    Mint.instance = new Mint(options);
-    return Mint.instance;
-  }
-
-  static clear() {
-    Mint.instance = new Mint();
-  }
-
-  readonly currencies: Record<CurrencyCode | string, ICurrency>;
-  readonly currencyCache: CurrencyCache;
+export class Mint {
+  readonly currencies: Record<string, Currency>;
   readonly defaultCurrency: Currency;
   readonly defaultLocale: string;
   readonly defaultPrecision: number;
   readonly defaultRoundingMode: RoundingMode;
   readonly mathContext: MathContext;
-  exchange?: Exchange;
+  exchange: Exchange;
 
   constructor({
     currencies = defaultCurrencies,
-    currencyCache = new CurrencyCache(),
     defaultCurrency = USD,
     defaultLocale = 'en-US',
     defaultPrecision = 16,
     defaultRoundingMode = RoundingMode.HALF_UP,
     exchange,
-  }: MintConstructor = {}) {
-    if (!currencies[defaultCurrency]) {
+  }: MintConfig = {}) {
+    if (!(defaultCurrency.isoCode in currencies)) {
       throw new UnknownCurrencyError(defaultCurrency);
     }
 
     this.currencies = currencies;
-    this.currencyCache = currencyCache;
     this.defaultLocale = defaultLocale;
-    this.defaultCurrency = new Currency(defaultCurrency, this);
+    this.defaultCurrency = defaultCurrency;
     this.defaultPrecision = defaultPrecision;
     this.defaultRoundingMode = defaultRoundingMode;
     this.mathContext = new MathContext(
@@ -66,27 +50,34 @@ export default class Mint {
       this.defaultRoundingMode
     );
 
-    this.useExchange = this.useExchange.bind(this);
-    this.Currency = this.Currency.bind(this);
     this.Money = this.Money.bind(this);
+    this.toCurrency = this.toCurrency.bind(this);
+    this.exchange = new Exchange(exchange?.store, this);
+  }
 
-    if (exchange) {
-      this.useExchange(exchange);
+  Money(
+    fractional?: Amount,
+    currency?: Currency | string | null,
+    options: Omit<MoneyOptions, 'mint'> = {}
+  ) {
+    let resolvedCurrency = this.defaultCurrency;
+
+    if (typeof currency === 'string') {
+      resolvedCurrency = this.toCurrency(currency);
+    } else if (currency) {
+      resolvedCurrency = currency;
     }
+
+    return new Money(fractional, resolvedCurrency, this, options);
   }
 
-  useExchange(exchange: Exchange) {
-    this.exchange = exchange;
-    exchange.mint = this;
+  toCurrency(code: string): Currency {
+    const currency = this.currencies[code];
 
-    return exchange;
-  }
+    if (!currency) {
+      throw new UnknownCurrencyError(code);
+    }
 
-  Currency(isoCode: CurrencyCode) {
-    return new Currency(isoCode, this);
-  }
-
-  Money(fractional?: FractionalInputType, currency?: CurrencyCode | null) {
-    return new Money(fractional, currency, this);
+    return currency;
   }
 }
