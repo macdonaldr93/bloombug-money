@@ -6,14 +6,14 @@
 A simple and consistent library for dealing with JavaScript money and currency in a browser & Node.js.
 
 ```js
-import { Mint } from '@bloombug/money';
+import { Mint, USD } from '@bloombug/money';
 
-const { Currency, Money } = new Mint();
+const { Money } = new Mint();
 
 const wallet = Money();
 //=> Money { fractional: 0, currency: 'USD' }
 
-const payment = Money(100);
+const payment = Money(100, USD);
 //=> Money { fractional: 100, currency: 'USD' }
 
 wallet.add(payment);
@@ -45,16 +45,16 @@ yarn add @bloombug/money
 ## Getting started
 
 ```js
-import { Mint } from '@bloombug/money';
+import { Mint, USD } from '@bloombug/money';
 
 const { Money } = new Mint();
-const money = Money(100, 'USD');
+const money = Money(100, USD);
 //=> Money { fractional: 100, currency: 'USD' }
 
-money.add(Money(100, 'USD'));
+money.add(Money(100, USD));
 //=> Money { fractional: 200, currency: 'USD' }
 
-money.subtract(Money(100, 'USD'));
+money.subtract(Money(100, USD));
 //=> Money { fractional: 100, currency: 'USD' }
 
 money.toString();
@@ -63,10 +63,10 @@ money.toString();
 money.format('fr-FR', { currencyDisplay: 'narrowSymbol' });
 //=> 100,00 $
 
-money.equals(Money(400, 'USD'));
+money.equals(Money(400, USD));
 //=> false
 
-money.equals(Money(100, 'USD'));
+money.equals(Money(100, USD));
 //=> true
 ```
 
@@ -76,9 +76,8 @@ money.equals(Money(100, 'USD'));
 
 ```js
 import { Mint, CAD, USD } from '@bloombug/money';
-import currencies from '@bloombug/money/iso-currencies.json';
 
-const { exchange, Money } = new Mint({ currencies, exchange: new Exchange() });
+const { exchange, Money } = new Mint({ currencies: { CAD, USD } });
 
 exchange.addRate(CAD, USD, 0.76);
 
@@ -95,9 +94,8 @@ usd.add(cad);
 
 ```js
 import { Mint, CAD } from '@bloombug/money';
-import currencies from '@bloombug/money/iso-currencies.json';
 
-const { Money } = new Mint({ currencies, defaultCurrency: CAD });
+const { Money } = new Mint({ currencies: { CAD, USD }, defaultCurrency: CAD });
 const money = Money('1,000.00');
 
 money.format('en-US');
@@ -118,27 +116,12 @@ money.format('fr-FR');
 
 ##### `currencies`
 
-Exports all ISO currency ISO codes.
+Exports all ISO currency ISO codes supported by Shopify.
 
 ```js
-import { Mint, CAD, EUR, USD } from '@bloombug/money';
-import currencies from '@bloombug/money/iso-currencies.json';
+import { Mint, currencies } from '@bloombug/money';
 
-const { Currency } = new Mint({ currencies });
-const cad = Currency(CAD);
-const eur = Currency(EUR);
-const usd = Currency(USD);
-```
-
-##### `iso-currencies.json`
-
-A list of all [ISO currencies](https://en.wikipedia.org/wiki/ISO_4217#Active_codes) and their metadata. This module is exported separated to reduce the bundle size for application with only one or a subset of currencies.
-
-```js
-import { Mint } from '@bloombug/money';
-import currencies from '@bloombug/money/iso-currencies.json';
-
-const { Currency } = new Mint({ currencies });
+const { Money } = new Mint({ currencies });
 ```
 
 ## React
@@ -181,11 +164,10 @@ if (typeof global.BigInt === 'undefined') {
 To start, you must wrap your app or part of your app in your `<MintProvider />`.
 
 ```jsx
-import { Mint } from '@bloombug/money';
-import currencies from '@bloombug/money/iso-currencies.json';
+import { Mint, shopifyCurrencies } from '@bloombug/money';
 import { MintProvider } from '@bloombug/react-money';
 
-const mint = new Mint({ currencies });
+const mint = new Mint({ currencies: shopifyCurrencies });
 
 const App = () => {
   return (
@@ -329,8 +311,8 @@ You will also need to include your setup file in your tsconfig.json if you haven
 This allows you to check whether a currency is equal to another.
 
 ```js
-expect(Currency(USD)).toEqualCurrency(Currency(USD));
-expect(Currency(USD)).not.toEqualCurrency(Currency(CAD));
+expect(USD).toEqualCurrency(USD);
+expect(USD).not.toEqualCurrency(CAD);
 ```
 
 #### toEqualMoney

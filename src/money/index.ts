@@ -1,3 +1,1 @@
-import Money from './money';
-
-export default Money;
+export { Money, MoneyOptions } from './money';

@@ -1,21 +1,15 @@
-export { RoundingMode } from 'bigdecimal.js';
+export { Big, BigDecimal, RoundingMode } from 'bigdecimal.js';
 export * from './currencies';
+export { Currency } from './currency';
+export * from './errors';
 export {
-  default as Currency,
-  CurrencyCache,
-  CurrencyCode,
-  CurrencyCodeISO4217,
-  ICurrency,
-  UnknownCurrencyError,
-} from './currency';
-export {
-  default as Exchange,
-  IExchangeStore,
-  IRate,
-  ExchangeMemoryStore,
-  UnknownRateError,
+  Exchange,
+  ExchangeOptions,
+  ExchangeStore,
+  InMemoryExchangeStore,
+  Rate,
 } from './exchange';
-export { default as Mint, MintConstructor } from './mint';
-export { default as Money } from './money';
-export { CurrencyFormatOptions, FractionalInputType } from './types';
-export { default as isMoney } from './utilities/isMoney';
+export { Mint, MintConfig } from './mint';
+export { Money, MoneyOptions } from './money';
+export { isMoney } from './utils/money-utils';
+export { Amount, CurrencyFormatOptions } from './types';

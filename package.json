@@ -1,11 +1,13 @@
 {
+  "name": "@bloombug/money",
   "version": "2.0.2",
+  "author": "Ryan Macdonald <hi@ryanmacdonald.ca>",
   "license": "MIT",
   "main": "dist/index.js",
+  "module": "dist/money.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
-    "dist",
-    "iso-currencies.json"
+    "dist"
   ],
   "engines": {
     "node": "^12.0.0 || ^14.0.0 || >=16.0.0"
@@ -19,38 +21,9 @@
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
-  "peerDependencies": {},
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
-  },
-  "prettier": {
-    "printWidth": 80,
-    "semi": true,
-    "singleQuote": true,
-    "trailingComma": "es5"
-  },
-  "name": "@bloombug/money",
-  "author": "Ryan Macdonald",
-  "module": "dist/money.esm.js",
-  "size-limit": [
-    {
-      "path": "dist/money.cjs.production.min.js",
-      "limit": "14 KB"
-    },
-    {
-      "path": "dist/money.esm.js",
-      "limit": "14 KB"
-    }
-  ],
-  "jest": {
-    "setupFilesAfterEnv": [
-      "<rootDir>/src/test/setup.ts"
-    ],
-    "collectCoverageFrom": [
-      "src/{!(jest),(test),}/{!(index),}.{ts,tsx,js,jsx}"
-    ]
+  "dependencies": {
+    "bigdecimal.js": "^1.3.0",
+    "lodash.memoize": "^4.1.2"
   },
   "devDependencies": {
     "@bloombug/jest-money": "^1.3.0",
@@ -65,8 +38,33 @@
     "typescript": "^4.5.4",
     "webpack": "^5.65.0"
   },
-  "dependencies": {
-    "bigdecimal.js": "^1.3.0",
-    "lodash.memoize": "^4.1.2"
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "size-limit": [
+    {
+      "path": "dist/money.cjs.production.min.js",
+      "limit": "15 KB"
+    },
+    {
+      "path": "dist/money.esm.js",
+      "limit": "15 KB"
+    }
+  ],
+  "jest": {
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/test-utils/setup.ts"
+    ],
+    "collectCoverageFrom": [
+      "src/{!(jest),(test),}/{!(index),}.{ts,tsx,js,jsx}"
+    ]
   }
 }

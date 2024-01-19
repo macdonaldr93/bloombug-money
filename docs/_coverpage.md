@@ -7,5 +7,6 @@
 - Multi-currency support
 - i18n built-in (no locale files)
 - React components and hooks
+- Built for Shopify
 
 [Get Started](#bloombugmoney)

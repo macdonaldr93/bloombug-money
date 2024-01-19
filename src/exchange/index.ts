@@ -1,6 +1,4 @@
-import Exchange from './exchange';
-
-export default Exchange;
-export { UnknownRateError } from './errors';
-export { default as ExchangeMemoryStore } from './exchangeMemoryStore';
-export { IExchangeStore, IRate } from './types';
+export { Exchange, ExchangeOptions } from './exchange';
+export { ExchangeStore } from './exchangeStore';
+export { InMemoryExchangeStore } from './inMemoryExchangeStore';
+export { Rate } from './rate';
