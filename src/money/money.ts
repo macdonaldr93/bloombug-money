@@ -77,7 +77,7 @@ export class Money {
     }
 
     return this.fractional.compareTo(
-      this.mint.exchange.exchangeWith(other, this.currency).fractional
+      this.mint.exchange.convert(other, this.currency).fractional
     );
   }
 
@@ -95,7 +95,7 @@ export class Money {
         );
       }
 
-      this.add(this.mint.exchange.exchangeWith(value, this.currency));
+      this.add(this.mint.exchange.convert(value, this.currency));
     }
 
     return this;
@@ -115,7 +115,7 @@ export class Money {
         );
       }
 
-      this.subtract(this.mint.exchange.exchangeWith(value, this.currency));
+      this.subtract(this.mint.exchange.convert(value, this.currency));
     }
 
     return this;
@@ -139,7 +139,7 @@ export class Money {
         );
       }
 
-      this.divide(this.mint.exchange.exchangeWith(value, this.currency));
+      this.divide(this.mint.exchange.convert(value, this.currency));
     }
 
     return this;
@@ -157,7 +157,7 @@ export class Money {
         throw new ExchangeMissingError();
       }
 
-      this.multiply(this.mint.exchange.exchangeWith(value, this.currency));
+      this.multiply(this.mint.exchange.convert(value, this.currency));
     }
 
     return this;

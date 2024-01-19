@@ -21,14 +21,14 @@ const payment2 = Money(2000, CAD);
 wallet.add(payment2);
 console.log(`+ Received payment of ${payment2.toLocaleString()}`);
 console.log(
-  `Coverting to USD: ${payment2} -> ${exchange.exchangeWith(payment2, USD)}`
+  `Coverting to USD: ${payment2} -> ${exchange.convert(payment2, USD)}`
 );
 console.log(`My wallet has ${wallet.toLocaleString()}`);
 
 const spending = Money(1000, CAD);
 console.log(`- Spending ${spending.toLocaleString()}`);
 console.log(
-  `Coverting to USD: ${spending.toLocaleString()} -> ${exchange.exchangeWith(
+  `Coverting to USD: ${spending.toLocaleString()} -> ${exchange.convert(
     spending,
     USD
   )}`

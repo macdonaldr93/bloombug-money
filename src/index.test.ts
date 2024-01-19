@@ -24,14 +24,14 @@ describe('@bloombug/money', () => {
 
     const payment2 = Money(2000, CAD);
     expect(payment2.toString()).toEqual('CA$20.00');
-    expect(exchange.exchangeWith(payment2, USD).toString()).toEqual('$14.84');
+    expect(exchange.convert(payment2, USD).toString()).toEqual('$14.84');
 
     wallet.add(payment2);
     expect(wallet.toString()).toEqual('$24.84');
 
     const spending = Money(1000, ISK);
     expect(spending.toString()).toEqual('ISK 1,000');
-    expect(exchange.exchangeWith(spending, USD).toString()).toEqual('$7.30');
+    expect(exchange.convert(spending, USD).toString()).toEqual('$7.30');
 
     wallet.subtract(spending);
     expect(wallet.toString()).toEqual('$17.54');
