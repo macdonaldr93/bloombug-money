@@ -41,13 +41,13 @@ describe('Exchange', () => {
     expect(rate.toString()).toEqual('1.26');
   });
 
-  describe('exchangeWith()', () => {
+  describe('convert()', () => {
     it('returns expected money', () => {
       const { exchange, Money } = new Mint({
         currencies,
         defaultLocale: 'en-US',
       });
-      const money = exchange.exchangeWith(Money(100, USD), USD);
+      const money = exchange.convert(Money(100, USD), USD);
 
       expect(money.toString()).toEqual('$1.00');
     });
@@ -60,7 +60,7 @@ describe('Exchange', () => {
 
       exchange.addRate(CAD, USD, 0.74);
 
-      const money = exchange.exchangeWith(Money(3599, CAD), USD);
+      const money = exchange.convert(Money(3599, CAD), USD);
 
       expect(money.toString()).toEqual('$26.63');
     });
@@ -74,7 +74,7 @@ describe('Exchange', () => {
       exchange.addRate(USD, ISK, 136.92);
       exchange.addRate(ISK, USD, 0.0073);
 
-      const money = exchange.exchangeWith(Money(3599, ISK), USD);
+      const money = exchange.convert(Money(3599, ISK), USD);
 
       expect(money.toString()).toEqual('$26.27');
     });
@@ -88,7 +88,7 @@ describe('Exchange', () => {
       exchange.addRate(USD, MRU, '39.5500');
       exchange.addRate(MRU, USD, '0.0253');
 
-      const money = exchange.exchangeWith(Money(3599, MRU), USD);
+      const money = exchange.convert(Money(3599, MRU), USD);
 
       expect(money.toString()).toEqual('$9.11');
     });
@@ -96,7 +96,7 @@ describe('Exchange', () => {
     it('throws if rate is unknown', () => {
       const { exchange, Money } = new Mint({ currencies });
 
-      expect(() => exchange.exchangeWith(Money(100, USD), CAD)).toThrow(
+      expect(() => exchange.convert(Money(100, USD), CAD)).toThrow(
         "No conversion rate known for 'USD' -> 'CAD'"
       );
     });

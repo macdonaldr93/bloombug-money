@@ -5,6 +5,7 @@ import { Money } from '../money';
 import { Amount } from '../types';
 import { InMemoryExchangeStore } from './inMemoryExchangeStore';
 import { ExchangeStore } from './exchangeStore';
+import { Rate } from './rate';
 
 export interface ExchangeOptions {}
 
@@ -21,32 +22,50 @@ export class Exchange {
     this.store = store;
   }
 
-  exchangeWith(money: Money, toCurrency: Currency): Money {
-    if (money.currency.isoCode === toCurrency.isoCode) {
+  convert(money: Money, to: string | Currency): Money {
+    to = typeof to === 'string' ? this.mint.toCurrency(to) : to;
+
+    if (money.currency.isoCode === to.isoCode) {
       return money;
     }
 
-    const rate = this.getRate(money.currency, toCurrency);
-    const exponent = toCurrency.exponent - money.currency.exponent;
-    const factor = toCurrency.base ** exponent;
+    const rate = this.getRate(money.currency, to);
+    const exponent = to.exponent - money.currency.exponent;
+    const factor = to.base ** exponent;
     const fractional = money.fractional.multiply(rate).multiply(factor);
 
-    return this.mint.Money(fractional, toCurrency);
+    return this.mint.Money(fractional, to);
   }
 
-  addRate(from: Currency, to: Currency, rate: Amount): BigDecimal {
+  refreshRates() {
+    return this.store.refreshRates();
+  }
+
+  addRates(rates: Rate[]) {
+    return this.store
+      .addRates(rates)
+      .map(r => Big(r, undefined, this.mint.mathContext));
+  }
+
+  addRate(
+    from: string | Currency,
+    to: string | Currency,
+    rate: Amount
+  ): BigDecimal {
+    from = typeof from === 'string' ? from : from.isoCode;
+    to = typeof to === 'string' ? to : to.isoCode;
+
     return Big(
-      this.store.addRate(from.isoCode, to.isoCode, rate.toString()),
+      this.store.addRate(from, to, rate.toString()),
       undefined,
       this.mint.mathContext
     );
   }
 
-  getRate(from: Currency, to: Currency): BigDecimal {
-    return Big(
-      this.store.getRate(from.isoCode, to.isoCode),
-      undefined,
-      this.mint.mathContext
-    );
+  getRate(from: string | Currency, to: string | Currency): BigDecimal {
+    from = typeof from === 'string' ? from : from.isoCode;
+    to = typeof to === 'string' ? to : to.isoCode;
+
+    return Big(this.store.getRate(from, to), undefined, this.mint.mathContext);
   }
 }

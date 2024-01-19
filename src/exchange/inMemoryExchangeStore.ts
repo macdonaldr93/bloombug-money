@@ -15,6 +15,10 @@ export class InMemoryExchangeStore implements ExchangeStore {
     }
   }
 
+  async refreshRates(): Promise<void> {
+    throw new Error('Rates are manually added using addRate() or addRates()');
+  }
+
   addRates(rates: Rate[]) {
     return rates.map(({ from, to, rate }) => this.addRate(from, to, rate));
   }
