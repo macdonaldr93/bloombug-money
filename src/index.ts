@@ -9,6 +9,7 @@ export {
   InMemoryExchangeStore,
   Rate,
 } from './exchange';
+export * from './globals';
 export { Mint, MintConfig } from './mint';
 export { Money, MoneyOptions } from './money';
 export { isMoney } from './utils/money-utils';
