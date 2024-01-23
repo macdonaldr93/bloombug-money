@@ -481,13 +481,13 @@ describe('Money', () => {
       const mint2 = new Mint({ defaultLocale: 'en-CA' });
       const money = mint2.Money(400, USD);
 
-      expect(money.toDecimal()).toEqual('4');
+      expect(money.toDecimal()).toEqual('4.0');
     });
 
     it('returns expected value for ISK', () => {
       const money = Money(421, ISK);
 
-      expect(money.toDecimal()).toEqual('421');
+      expect(money.toDecimal()).toEqual('421.0');
     });
 
     it('returns expected value for EUR', () => {
@@ -499,7 +499,7 @@ describe('Money', () => {
     it('returns expected value for GBP', () => {
       const money = Money(400, GBP);
 
-      expect(money.toDecimal()).toEqual('4');
+      expect(money.toDecimal()).toEqual('4.0');
     });
   });
 

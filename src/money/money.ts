@@ -267,12 +267,13 @@ export class Money {
 
   toDecimal(): string {
     const factor = this.currency.base ** this.currency.exponent;
-
-    return this.fractional
+    const float = this.fractional
       .divide(factor)
       .round(this.mint.mathContext)
-      .numberValue()
-      .toString();
+      .numberValue();
+    const decimal = Number.isInteger(float) ? float + '.0' : float.toString();
+
+    return decimal;
   }
 
   toNumber(): number {
