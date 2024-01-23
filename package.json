@@ -1,6 +1,6 @@
 {
   "name": "@bloombug/money",
-  "version": "3.2.1",
+  "version": "3.3.0",
   "author": "Ryan Macdonald <hi@ryanmacdonald.ca>",
   "license": "MIT",
   "main": "dist/index.js",
