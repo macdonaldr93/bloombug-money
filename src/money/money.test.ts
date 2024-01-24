@@ -20,13 +20,13 @@ describe('Money', () => {
     });
   });
 
-  describe('#fractional', () => {
+  describe('#amount', () => {
     it('returns expected value', () => {
       const money = Money(400, CAD);
 
       expect(money.toJSON()).toStrictEqual({
         currency: 'CAD',
-        fractional: 400,
+        amount: 400,
       });
     });
 
@@ -35,7 +35,7 @@ describe('Money', () => {
 
       expect(money.toJSON()).toStrictEqual({
         currency: 'CAD',
-        fractional: 40000,
+        amount: 40000,
       });
     });
   });
@@ -277,28 +277,28 @@ describe('Money', () => {
   });
 
   describe('equals()', () => {
-    it('returns true when money is same fractional and currency', () => {
+    it('returns true when money is same amount and currency', () => {
       const money1 = Money(400, CAD);
       const money2 = Money(400, CAD);
 
       expect(money1.equals(money2)).toBeTruthy();
     });
 
-    it('returns false when money is same fractional and different currency', () => {
+    it('returns false when money is same amount and different currency', () => {
       const money1 = Money(400, CAD);
       const money2 = Money(400, USD);
 
       expect(money1.equals(money2)).toBeFalsy();
     });
 
-    it('returns false when money is different fractional and same currency', () => {
+    it('returns false when money is different amount and same currency', () => {
       const money1 = Money(500, CAD);
       const money2 = Money(400, CAD);
 
       expect(money1.equals(money2)).toBeFalsy();
     });
 
-    it('returns false when money is different fractional and different currency', () => {
+    it('returns false when money is different amount and different currency', () => {
       const money1 = Money(500, CAD);
       const money2 = Money(400, USD);
 
@@ -504,7 +504,7 @@ describe('Money', () => {
   });
 
   describe('toFractional()', () => {
-    it('returns expected fractional', () => {
+    it('returns expected amount', () => {
       const money = Money('4.212', CAD);
 
       money.divide(3);
@@ -544,7 +544,7 @@ describe('Money', () => {
       const money = Money(400, CAD);
 
       expect(money.toJSON()).toStrictEqual({
-        fractional: 400,
+        amount: 400,
         currency: 'CAD',
       });
     });

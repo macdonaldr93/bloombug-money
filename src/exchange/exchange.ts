@@ -32,9 +32,9 @@ export class Exchange {
     const rate = this.getRate(money.currency, to);
     const exponent = to.exponent - money.currency.exponent;
     const factor = to.base ** exponent;
-    const fractional = money.fractional.multiply(rate).multiply(factor);
+    const amount = money.amount.multiply(rate).multiply(factor);
 
-    return this.mint.Money(fractional, to);
+    return this.mint.Money(amount, to);
   }
 
   refreshRates() {

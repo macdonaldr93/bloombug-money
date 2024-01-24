@@ -11,13 +11,13 @@ import { Mint, USD } from '@bloombug/money';
 const { Money } = new Mint();
 
 const wallet = Money();
-//=> Money { fractional: 0, currency: 'USD' }
+//=> Money { amount: 0, currency: 'USD' }
 
 const payment = Money(100, USD);
-//=> Money { fractional: 100, currency: 'USD' }
+//=> Money { amount: 100, currency: 'USD' }
 
 wallet.add(payment);
-//=> Money { fractional: 100, currency: 'USD' }
+//=> Money { amount: 100, currency: 'USD' }
 ```
 
 ## Installation
@@ -49,13 +49,13 @@ import { Mint, USD } from '@bloombug/money';
 
 const { Money } = new Mint();
 const money = Money(100, USD);
-//=> Money { fractional: 100, currency: 'USD' }
+//=> Money { amount: 100, currency: 'USD' }
 
 money.add(Money(100, USD));
-//=> Money { fractional: 200, currency: 'USD' }
+//=> Money { amount: 200, currency: 'USD' }
 
 money.subtract(Money(100, USD));
-//=> Money { fractional: 100, currency: 'USD' }
+//=> Money { amount: 100, currency: 'USD' }
 
 money.toString();
 //=> $1.00
@@ -85,7 +85,7 @@ const usd = Money(100);
 const cad = Money(100, CAD);
 
 usd.add(cad);
-//=> Money { fractional: 176, currency: 'USD' }
+//=> Money { amount: 176, currency: 'USD' }
 ```
 
 ### i18n and formatting
@@ -191,9 +191,9 @@ import { MoneyText } from '@bloombug/react-money';
 const Component = () => {
   return (
     <p>
-      <MoneyText fractional={100} currency="USD" />
+      <MoneyText amount={100} currency="USD" />
       <MoneyText
-        fractional={100}
+        amount={100}
         currency="CAD"
         currencyDisplay="narrowSymbol"
         locale="en-CA"

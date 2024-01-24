@@ -56,7 +56,7 @@ export class Mint {
   }
 
   Money(
-    fractional?: Amount,
+    amount?: Amount,
     currency?: Currency | string | null,
     options: Omit<MoneyOptions, 'mint'> = {}
   ) {
@@ -68,7 +68,7 @@ export class Mint {
       resolvedCurrency = currency;
     }
 
-    return new Money(fractional, resolvedCurrency, this, options);
+    return new Money(amount, resolvedCurrency, this, options);
   }
 
   toCurrency(code: string): Currency {

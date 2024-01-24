@@ -10,74 +10,85 @@ export interface MoneyOptions {}
 export class Money {
   static readonly ZERO = Big(0);
 
-  fractional: BigDecimal;
+  amount: BigDecimal;
   readonly currency: Currency;
 
+  private readonly currencyFactor: number;
   private readonly mint: Mint;
 
   constructor(
-    fractional: Amount = Money.ZERO,
+    amount: Amount = Money.ZERO,
     currency: Currency,
     mint: Mint,
     _options: MoneyOptions = {}
   ) {
     this.mint = mint;
     this.currency = currency;
+    this.currencyFactor = this.currency.base ** this.currency.exponent;
 
-    // When fractional is a string with a period, we treat as decimal
+    // When amount is a string with a period, we treat as decimal
     // 100.0 = $100.00 = ¢10000
-    if (typeof fractional === 'string' && fractional.includes('.')) {
-      const factor = this.currency.base ** this.currency.exponent;
-      this.fractional = Big(
-        fractional,
-        undefined,
-        this.mint.mathContext
-      ).multiply(factor);
+    if (typeof amount === 'string' && amount.includes('.')) {
+      this.amount = Big(amount, undefined, this.mint.mathContext).multiply(
+        this.currencyFactor
+      );
     } else {
-      this.fractional = Big(fractional, undefined, this.mint.mathContext);
+      this.amount = Big(amount, undefined, this.mint.mathContext);
     }
+  }
+
+  isZero(): boolean {
+    return this.amount.compareTo(Money.ZERO) === 0;
   }
 
   equals(other: Money): boolean {
     return (
-      this.fractional.compareTo(other.fractional) === 0 &&
+      this.amount.compareTo(other.amount) === 0 &&
       this.currency.isoCode === other.currency.isoCode
     );
   }
 
-  isZero(): boolean {
-    return this.fractional.compareTo(Money.ZERO) === 0;
-  }
-
   gt(other: Money): boolean {
-    return this.compareTo(other) === 1;
+    return (
+      this.compareTo(other) === 1 &&
+      this.currency.isoCode === other.currency.isoCode
+    );
   }
 
   gte(other: Money): boolean {
     const comparison = this.compareTo(other);
-    return comparison === 1 || comparison === 0;
+    return (
+      (comparison === 1 || comparison === 0) &&
+      this.currency.isoCode === other.currency.isoCode
+    );
   }
 
   lt(other: Money): boolean {
-    return this.compareTo(other) === -1;
+    return (
+      this.compareTo(other) === -1 &&
+      this.currency.isoCode === other.currency.isoCode
+    );
   }
 
   lte(other: Money): boolean {
     const comparison = this.compareTo(other);
-    return comparison === -1 || comparison === 0;
+    return (
+      (comparison === -1 || comparison === 0) &&
+      this.currency.isoCode === other.currency.isoCode
+    );
   }
 
   compareTo(other: Money): number {
     if (this.currency.isoCode === other.currency.isoCode) {
-      return this.fractional.compareTo(other.fractional);
+      return this.amount.compareTo(other.amount);
     }
 
     if (!this.mint.exchange) {
       throw new ExchangeMissingError();
     }
 
-    return this.fractional.compareTo(
-      this.mint.exchange.convert(other, this.currency).fractional
+    return this.amount.compareTo(
+      this.mint.exchange.convert(other, this.currency).amount
     );
   }
 
@@ -87,7 +98,7 @@ export class Money {
     }
 
     if (this.currency.isoCode === value.currency.isoCode) {
-      this.fractional = this.fractional.add(value.fractional);
+      this.amount = this.amount.add(value.amount);
     } else {
       if (!this.mint.exchange) {
         throw new Error(
@@ -107,7 +118,7 @@ export class Money {
     }
 
     if (this.currency.isoCode === value.currency.isoCode) {
-      this.fractional = this.fractional.subtract(value.fractional);
+      this.amount = this.amount.subtract(value.amount);
     } else {
       if (!this.mint.exchange) {
         throw new Error(
@@ -127,10 +138,9 @@ export class Money {
     }
 
     if (this.currency.isoCode === value.currency.isoCode) {
-      this.fractional = this.fractional.divide(
-        value.fractional,
-        undefined,
-        this.mint.defaultRoundingMode
+      this.amount = this.amount.divideWithMathContext(
+        value.amount,
+        this.mint.mathContext
       );
     } else {
       if (!this.mint.exchange) {
@@ -151,7 +161,7 @@ export class Money {
     }
 
     if (this.currency.isoCode === value.currency.isoCode) {
-      this.fractional = this.fractional.multiply(value.fractional);
+      this.amount = this.amount.multiply(value.amount);
     } else {
       if (!this.mint.exchange) {
         throw new ExchangeMissingError();
@@ -164,13 +174,13 @@ export class Money {
   }
 
   negate() {
-    this.fractional = this.fractional.negate();
+    this.amount = this.amount.negate();
 
     return this;
   }
 
   clone() {
-    return new Money(this.fractional, this.currency, this.mint);
+    return new Money(this.amount, this.currency, this.mint);
   }
 
   formatter(locales: string | string[]): Intl.NumberFormat;
@@ -260,40 +270,64 @@ export class Money {
   }
 
   toBigInt(): BigInt {
-    return this.fractional.toBigInt();
+    return this.amount.toBigInt();
   }
 
+  /**
+   * Returns the amount with full precision. It's possible to have
+   * fractions of the minor units.
+   *
+   * For USD, the fractional amount can return 1000.12 cents.
+   */
   toFractional(): number {
-    return this.fractional.numberValue();
+    return this.amount.numberValue();
   }
 
+  /**
+   * Returns the amount rounded to the minor unit of the currency.
+   *
+   * For USD, cents is returned which is 1/100 of their dollar.
+   * For JPY, yen is returned which is the smallest unit.
+   */
   toMinorUnit(): number {
-    return Math.round(this.fractional.numberValue());
+    return this.amount
+      .setScale(0, this.mint.mathContext.roundingMode)
+      .numberValue();
   }
 
+  /**
+   * Returns the amount as a decimal string. It's possible to have
+   * fractions of the minor units.
+   *
+   * For USD, the decimal amount can return 100.121 dollars.
+   */
   toDecimal(): string {
     const factor = this.currency.base ** this.currency.exponent;
-    const float = this.fractional
-      .divide(factor)
-      .round(this.mint.mathContext)
+    const float = this.amount
+      .divideWithMathContext(factor, this.mint.mathContext)
       .numberValue();
     const decimal = Number.isInteger(float) ? float + '.0' : float.toString();
 
     return decimal;
   }
 
+  /**
+   * Returns the amount as a number. It's possible to have
+   * fractions of the minor units.
+   *
+   * For USD, the decimal amount can return 100.121 dollars.
+   */
   toNumber(): number {
     const factor = this.currency.base ** this.currency.exponent;
 
-    return this.fractional
-      .divide(factor)
-      .round(this.mint.mathContext)
+    return this.amount
+      .divideWithMathContext(factor, this.mint.mathContext)
       .numberValue();
   }
 
   toJSON() {
     return {
-      fractional: this.toFractional(),
+      amount: this.toFractional(),
       currency: this.currency.isoCode,
     };
   }

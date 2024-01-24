@@ -11,13 +11,13 @@ import { Mint, USD } from '@bloombug/money';
 const { Money } = new Mint();
 
 const wallet = Money();
-//=> Money { fractional: 0, currency: 'USD' }
+//=> Money { amount: 0, currency: 'USD' }
 
 const payment = Money(100, USD);
-//=> Money { fractional: 100, currency: 'USD' }
+//=> Money { amount: 100, currency: 'USD' }
 
 wallet.add(payment);
-//=> Money { fractional: 100, currency: 'USD' }
+//=> Money { amount: 100, currency: 'USD' }
 ```
 
 ## Installation
