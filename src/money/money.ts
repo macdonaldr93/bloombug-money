@@ -164,11 +164,24 @@ export class Money {
   }
 
   negate() {
-    return this.mint.Money(this.fractional.negate(), this.currency);
+    this.fractional = this.fractional.negate();
+
+    return this;
   }
 
   clone() {
     return new Money(this.fractional, this.currency, this.mint);
+  }
+
+  round(precision: number) {
+    precision = precision || this.currency.exponent || 1;
+
+    this.fractional = this.fractional.round({
+      precision,
+      roundingMode: this.mint.mathContext.roundingMode,
+    });
+
+    return this;
   }
 
   formatter(locales: string | string[]): Intl.NumberFormat;
@@ -263,6 +276,15 @@ export class Money {
 
   toFractional(): number {
     return this.fractional.numberValue();
+  }
+
+  toMinorUnit(): number {
+    return this.fractional
+      .round({
+        roundingMode: this.mint.mathContext.roundingMode,
+        precision: this.currency.exponent || 1,
+      })
+      .numberValue();
   }
 
   toDecimal(): string {

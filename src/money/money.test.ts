@@ -505,9 +505,29 @@ describe('Money', () => {
 
   describe('toFractional()', () => {
     it('returns expected fractional', () => {
-      const money = Money(400, CAD);
+      const money = Money('4.212', CAD);
 
-      expect(money.toFractional()).toEqual(400);
+      money.divide(3);
+
+      expect(money.toFractional()).toEqual(140.4);
+    });
+  });
+
+  describe('toMinorUnit()', () => {
+    it('returns expected minor unit', () => {
+      const money = Money('4.212', CAD);
+
+      money.divide(3);
+
+      expect(money.toMinorUnit()).toEqual(140);
+    });
+
+    it('returns expected minor unit for currency without minor units', () => {
+      const money = Money('4.212', ISK);
+
+      money.divide(3);
+
+      expect(money.toMinorUnit()).toEqual(1);
     });
   });
 
