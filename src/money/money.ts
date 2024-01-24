@@ -173,17 +173,6 @@ export class Money {
     return new Money(this.fractional, this.currency, this.mint);
   }
 
-  round(precision: number) {
-    precision = precision || this.currency.exponent || 1;
-
-    this.fractional = this.fractional.round({
-      precision,
-      roundingMode: this.mint.mathContext.roundingMode,
-    });
-
-    return this;
-  }
-
   formatter(locales: string | string[]): Intl.NumberFormat;
   formatter(options?: CurrencyFormatOptions): Intl.NumberFormat;
   formatter(
@@ -279,12 +268,7 @@ export class Money {
   }
 
   toMinorUnit(): number {
-    return this.fractional
-      .round({
-        roundingMode: this.mint.mathContext.roundingMode,
-        precision: this.currency.exponent || 1,
-      })
-      .numberValue();
+    return Math.round(this.fractional.numberValue());
   }
 
   toDecimal(): string {

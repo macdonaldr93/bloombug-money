@@ -36,4 +36,30 @@ describe('@bloombug/money', () => {
     wallet.subtract(spending);
     expect(wallet.toString()).toEqual('$17.54');
   });
+
+  it('handles Shopify orders and usage percentage', () => {
+    const { Money } = new Mint({
+      currencies,
+      defaultCurrency: USD,
+      defaultLocale: 'en-US',
+    });
+
+    const order1 = Money('173.05', 'USD');
+    const order2 = Money('239.58', 'USD');
+    const order3 = Money('138.00', 'USD');
+
+    const usage = Money(0, 'USD');
+    const usagePercentage = 3 / 100;
+
+    usage
+      .add(order1)
+      .add(order2)
+      .add(order3)
+      .multiply(usagePercentage);
+
+    expect(usage.toFractional()).toEqual(1651.89);
+    expect(usage.toDecimal()).toEqual('16.5189');
+    expect(usage.toMinorUnit()).toEqual(1652);
+    expect(usage.currency.isoCode).toEqual('USD');
+  });
 });
