@@ -98,49 +98,9 @@ export class Money {
     }
 
     if (this.currency.isoCode === value.currency.isoCode) {
-      this.amount = this.amount.add(value.amount);
-    } else {
-      if (!this.mint.exchange) {
-        throw new Error(
-          'You must instantiate an exchange for currency exchange'
-        );
-      }
-
-      this.add(this.mint.exchange.convert(value, this.currency));
-    }
-
-    return this;
-  }
-
-  subtract(value: Money): Money {
-    if (!(value instanceof Money)) {
-      value = this.mint.Money(value, this.currency);
-    }
-
-    if (this.currency.isoCode === value.currency.isoCode) {
-      this.amount = this.amount.subtract(value.amount);
-    } else {
-      if (!this.mint.exchange) {
-        throw new Error(
-          'You must instantiate an exchange for currency exchange'
-        );
-      }
-
-      this.subtract(this.mint.exchange.convert(value, this.currency));
-    }
-
-    return this;
-  }
-
-  divide(value: Amount | Money): Money {
-    if (!(value instanceof Money)) {
-      value = this.mint.Money(value, this.currency);
-    }
-
-    if (this.currency.isoCode === value.currency.isoCode) {
-      this.amount = this.amount.divideWithMathContext(
-        value.amount,
-        this.mint.mathContext
+      return this.mint.Money(
+        this.amount.add(value.amount),
+        this.currency.isoCode
       );
     } else {
       if (!this.mint.exchange) {
@@ -149,10 +109,50 @@ export class Money {
         );
       }
 
-      this.divide(this.mint.exchange.convert(value, this.currency));
+      return this.add(this.mint.exchange.convert(value, this.currency));
+    }
+  }
+
+  subtract(value: Money): Money {
+    if (!(value instanceof Money)) {
+      value = this.mint.Money(value, this.currency);
     }
 
-    return this;
+    if (this.currency.isoCode === value.currency.isoCode) {
+      return this.mint.Money(
+        this.amount.subtract(value.amount),
+        this.currency.isoCode
+      );
+    } else {
+      if (!this.mint.exchange) {
+        throw new Error(
+          'You must instantiate an exchange for currency exchange'
+        );
+      }
+
+      return this.subtract(this.mint.exchange.convert(value, this.currency));
+    }
+  }
+
+  divide(value: Amount | Money): Money {
+    if (!(value instanceof Money)) {
+      value = this.mint.Money(value, this.currency);
+    }
+
+    if (this.currency.isoCode === value.currency.isoCode) {
+      return this.mint.Money(
+        this.amount.divideWithMathContext(value.amount, this.mint.mathContext),
+        this.currency.isoCode
+      );
+    } else {
+      if (!this.mint.exchange) {
+        throw new Error(
+          'You must instantiate an exchange for currency exchange'
+        );
+      }
+
+      return this.divide(this.mint.exchange.convert(value, this.currency));
+    }
   }
 
   multiply(value: Amount | Money): Money {
@@ -161,26 +161,25 @@ export class Money {
     }
 
     if (this.currency.isoCode === value.currency.isoCode) {
-      this.amount = this.amount.multiply(value.amount);
+      return this.mint.Money(
+        this.amount.multiply(value.amount),
+        this.currency.isoCode
+      );
     } else {
       if (!this.mint.exchange) {
         throw new ExchangeMissingError();
       }
 
-      this.multiply(this.mint.exchange.convert(value, this.currency));
+      return this.multiply(this.mint.exchange.convert(value, this.currency));
     }
-
-    return this;
   }
 
   negate() {
-    this.amount = this.amount.negate();
-
-    return this;
+    return this.mint.Money(this.amount.negate(), this.currency.isoCode);
   }
 
   clone() {
-    return new Money(this.amount, this.currency, this.mint);
+    return this.mint.Money(this.amount, this.currency);
   }
 
   formatter(locales: string | string[]): Intl.NumberFormat;

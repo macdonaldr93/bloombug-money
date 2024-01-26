@@ -48,6 +48,15 @@ describe('Money', () => {
       expect(money.add(other)).toEqualMoney(Money(800, CAD));
     });
 
+    it('adds money is immutable', () => {
+      const money = Money(400, CAD);
+      const other = Money(400, CAD);
+
+      money.add(other);
+
+      expect(money).toEqualMoney(Money(400, CAD));
+    });
+
     it('adds money from a different currency', () => {
       const mint2 = new Mint({ currencies });
       mint2.exchange.addRate(USD, CAD, 1.26);
@@ -55,9 +64,7 @@ describe('Money', () => {
       const money = mint2.Money(400, CAD);
       const other = mint2.Money(400, USD);
 
-      money.add(other);
-
-      expect(money).toEqualMoney(mint2.Money(904, CAD));
+      expect(money.add(other)).toEqualMoney(mint2.Money(904, CAD));
     });
 
     it('throws when exchange rate is not found', () => {
@@ -77,6 +84,15 @@ describe('Money', () => {
       const other = Money(100, CAD);
 
       expect(money.subtract(other)).toEqualMoney(Money(300, CAD));
+    });
+
+    it('subtracts money is immutable', () => {
+      const money = Money(400, CAD);
+      const other = Money(100, CAD);
+
+      money.subtract(other);
+
+      expect(money).toEqualMoney(Money(400, CAD));
     });
 
     it('subtracts money from a different currency', () => {
@@ -108,7 +124,16 @@ describe('Money', () => {
       expect(money.divide(other)).toEqualMoney(Money(200, CAD));
     });
 
-    it.only('divides two monies with rounding', () => {
+    it('divides two monies is immutable', () => {
+      const money = Money(400, CAD);
+      const other = Money(2, CAD);
+
+      money.divide(other);
+
+      expect(money).toEqualMoney(Money(400, CAD));
+    });
+
+    it('divides two monies with rounding', () => {
       const money = Money(234523, CAD);
       const other = Money(21234, CAD);
 
@@ -128,7 +153,9 @@ describe('Money', () => {
       const money = mint2.Money(400, CAD);
       const other = mint2.Money(4, USD);
 
-      expect(money.divide(other)).toEqualMoney(mint2.Money(79, CAD));
+      expect(money.divide(other)).toEqualMoney(
+        mint2.Money('0.7936507936507937', CAD)
+      );
     });
 
     it('throws when exchange rate is not found', () => {
@@ -143,11 +170,20 @@ describe('Money', () => {
   });
 
   describe('multiply()', () => {
-    it('multiples money', () => {
+    it('multiplies money', () => {
       const money = Money(400, CAD);
       const other = Money(2, CAD);
 
       expect(money.multiply(other)).toEqualMoney(Money(800, CAD));
+    });
+
+    it('multiplying money is immutable', () => {
+      const money = Money(400, CAD);
+      const other = Money(2, CAD);
+
+      money.multiply(other);
+
+      expect(money).toEqualMoney(Money(400, CAD));
     });
 
     it('multiplies by a number', () => {
@@ -182,6 +218,14 @@ describe('Money', () => {
       const money = Money(400, CAD);
 
       expect(money.negate()).toEqualMoney(Money(-400, CAD));
+    });
+
+    it('negate money is immutable', () => {
+      const money = Money(400, CAD);
+
+      money.negate();
+
+      expect(money).toEqualMoney(Money(400, CAD));
     });
 
     it('returns negative amount as positive', () => {
@@ -507,9 +551,7 @@ describe('Money', () => {
     it('returns expected amount', () => {
       const money = Money('4.212', CAD);
 
-      money.divide(3);
-
-      expect(money.toFractional()).toEqual(140.4);
+      expect(money.divide(3).toFractional()).toEqual(140.4);
     });
   });
 
@@ -517,17 +559,13 @@ describe('Money', () => {
     it('returns expected minor unit', () => {
       const money = Money('4.212', CAD);
 
-      money.divide(3);
-
-      expect(money.toMinorUnit()).toEqual(140);
+      expect(money.divide(3).toMinorUnit()).toEqual(140);
     });
 
     it('returns expected minor unit for currency without minor units', () => {
       const money = Money('4.212', ISK);
 
-      money.divide(3);
-
-      expect(money.toMinorUnit()).toEqual(1);
+      expect(money.divide(3).toMinorUnit()).toEqual(1);
     });
   });
 
